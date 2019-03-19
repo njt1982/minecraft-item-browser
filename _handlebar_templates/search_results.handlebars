@@ -1,5 +1,10 @@
   {{#each results}}
-    <button type="button" data-id="{{id}}" class="list-group-item list-group-item-action">{{displayName}}</button>
+    <button type="button" data-id="{{item.id}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+      {{item.displayName}}
+      {{#if texture}}
+        <img src="{{texture.texture}}" alt="{{texture.name}}" />
+      {{/if}}
+    </button>
   {{else}}
     <li class="list-group-item disabled">No results</li>
   {{/each}}

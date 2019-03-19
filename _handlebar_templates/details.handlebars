@@ -6,20 +6,25 @@
         <span class="input">
           {{#if ingredients}}
             {{#each ingredients}}
-              <span>{{displayName}}</span>
+              <span>{{item.displayName}}</span>
+              {{#if texture}}
+                <img src="{{texture.texture}}" alt="{{texture.name}}" title="{{item.displayName}}" />
+              {{/if}}
             {{/each}}
           {{/if}}
 
           {{#if inShape}}
-            <table class="in-shape d-inline-block">
+            <table class="in-shape table table-bordered w-auto">
             {{#each inShape}}
               <tr class="in-shape-row">
                 {{#each this}}
                   <td class="in-shape-col">
                     {{#if this}}
-                      <span>{{displayName}}</span>
+                      {{#if texture}}
+                        <img src="{{texture.texture}}" alt="{{texture.name}}" title="{{item.displayName}}" />
+                      {{/if}}
                     {{else}}
-                      <span>N</span>
+                      <span class="in-shape-empty"></span>
                     {{/if}}
                   </td>
                 {{/each}}
@@ -30,8 +35,7 @@
         </span>
         =&gt;
         <span class="output">
-          <span>{{result.item.displayName}}</span>
-          <span>{{result.count}}</span>
+          <span>{{result.item.displayName}}</span> (<span>{{result.count}}</span>)
         </span>
       </div>
     {{/each}}

@@ -3,6 +3,23 @@
   margin-top: 16em;
 }
 
-button.list-group-item-action:focus {
-  outline: 0;
+.in-shape-col {
+  img {
+    width: 32px;
+    height: 32px;
+    display: block;
+    image-rendering: pixelated;
+  }
+}
+
+#search_result_wrapper {
+  button.list-group-item-action {
+    img {
+      transform: scale(2);
+      image-rendering: pixelated;
+    }
+    &:focus {
+      outline: 0;
+    }
+  }
 }
