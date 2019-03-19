@@ -1,5 +1,9 @@
-(function($) {
-  var ITEMS = [], RECIPES = [], $searchResult = $('#search_result'), $detailsWrapper = $('#details_wrapper');
+(function($, Handlebars) {
+  var ITEMS = [],
+      RECIPES = [],
+      searchResult = document.getElementById('search_result_wrapper'),
+      detailsWrapper = document.getElementById('details_wrapper'),
+      $searchBox = $('#search_box');
 
   $.when(
     $.getJSON('assets/items.json'),
@@ -7,40 +11,56 @@
   ).then(function(items, recipes) {
     ITEMS = items[0];
     RECIPES = recipes[0];
+    $searchBox.val('Pickaxe').trigger('keyup');
   });
 
-
   var keyUptTimeout = null;
-  $('#search_box').on('keyup', function(e) {
+  $searchBox.on('keyup', function(e) {
     if (keyUptTimeout != null) { clearTimeout(keyUptTimeout); }
 
     var searchText = e.target.value.toLowerCase();
 
     keyUptTimeout = setTimeout(function() {
       keyUptTimeout = null;
-      $searchResult.empty();
+      searchResult.innerHTML = '';
 
       var resultSize = 0;
-      ITEMS.filter(function(i) {
+      var results = ITEMS.filter(function(i) {
         if (resultSize < 10 && i.displayName.toLowerCase().indexOf(searchText) !== -1) {
           resultSize += 1;
           return true
         }
         return false;
-      }).forEach(function(i) {
-        $searchResult.append('<button type="button" data-id="' + i.id + '" class="list-group-item list-group-item-action">' + i.displayName + '</button>');
       });
+      searchResult.innerHTML = Handlebars.templates.search_results({results: results});
     }, 150);
   });
 
-  $searchResult.on('click', 'button', function(e) {
-    console.log(e, e.target.dataset.id);
-    var item = ITEMS.find(function(i) {return (i.id == e.target.dataset.id) })
-    console.log(item);
+  $(searchResult).on('click', 'button', function(e) {
+    var context = {
+      item: ITEMS[e.target.dataset.id],
+      recipes: (RECIPES[e.target.dataset.id] || []).map(function(recipe) {
+        if (recipe.result) {
+          recipe.result.item = ITEMS[recipe.result.id]
+        }
+        if (recipe.ingredients) {
+          recipe.ingredients = recipe.ingredients.map(function(ingredient) {
+            return ITEMS[ingredient];
+          })
+        }
+        if (recipe.inShape) {
+          recipe.inShape = recipe.inShape.map(function(row) {
+            return row.map(function(col) {
+              return col === null ? null : ITEMS[col];
+            });
+          }).reverse(); // For some reason, the rows are inverted. See: https://github.com/PrismarineJS/minecraft-data/issues/231
+        }
+        return recipe;
+      })
+    };
+    console.log(context);
 
-    $detailsWrapper.empty();
-
-    $detailsWrapper.append('<h1>' + item.displayName + '</h1>')
+    detailsWrapper.innerHTML = Handlebars.templates.details(context);
   });
 
-})(jQuery);
+})(jQuery, Handlebars);

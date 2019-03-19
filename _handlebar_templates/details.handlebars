@@ -1,0 +1,39 @@
+<h1>{{item.displayName}}</h1>
+<div class="recipes">
+  {{#if recipes}}
+    {{#each recipes}}
+      <div class="recipe">
+        <span class="input">
+          {{#if ingredients}}
+            {{#each ingredients}}
+              <span>{{displayName}}</span>
+            {{/each}}
+          {{/if}}
+
+          {{#if inShape}}
+            <table class="in-shape">
+            {{#each inShape}}
+              <tr class="in-shape-row">
+                {{#each this}}
+                  <td class="in-shape-col">
+                    {{#if this}}
+                      <span>{{displayName}}</span>
+                    {{else}}
+                      <span>N</span>
+                    {{/if}}
+                  </td>
+                {{/each}}
+              </tr>
+            {{/each}}
+            </table>
+          {{/if}}
+        </span>
+        =&gt;
+        <span class="output">
+          <span>{{result.item.displayName}}</span>
+          <span>{{result.count}}</span>
+        </span>
+      </div>
+    {{/each}}
+  {{/if}}
+</div>
