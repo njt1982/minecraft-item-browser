@@ -7,7 +7,6 @@
   ).then(function(items, recipes) {
     ITEMS = items[0];
     RECIPES = recipes[0];
-    console.log(RECIPES);
   });
 
 

@@ -2,10 +2,10 @@ title: Minecraft Browser
 email: njt1982@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   An easy item and recipe browser for Minecraft
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/minecraft-item-browser" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: TODO
-#repository: ihd-hk/ihd-hk.github.io
+repository: njt1982/minecraft-item-browser
 
 # Build settings
 markdown: kramdown
