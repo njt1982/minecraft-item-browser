@@ -2,6 +2,7 @@
   var ITEMS = [],
       RECIPES = [],
       TEXTURE_CONTENT = [],
+      TEXTURE_CONTENT_MAP = {},
       searchResult = document.getElementById('search_result_wrapper'),
       detailsWrapper = document.getElementById('details_wrapper'),
       $searchBox = $('#search_box');
@@ -14,8 +15,25 @@
     ITEMS = items[0];
     RECIPES = recipes[0];
     TEXTURE_CONTENT = texture_content[0];
-    $searchBox.val('Pickaxe').trigger('keyup');
+    TEXTURE_CONTENT_MAP = TEXTURE_CONTENT.reduce(function(acc, val, key) {
+      acc[val.name] = key;
+      return acc;
+    }, {});
   });
+
+  var getItem = function(item) {
+    if (item === null) return null;
+
+    if (typeof item == 'object') {
+      item = item.id
+    }
+
+    var item = { item: ITEMS[item] };
+    if (TEXTURE_CONTENT_MAP[item.item.name]) {
+      item.texture = TEXTURE_CONTENT[TEXTURE_CONTENT_MAP[item.item.name]];
+    }
+    return item;
+  }
 
   var keyUptTimeout = null;
   $searchBox.on('keyup', function(e) {
@@ -35,46 +53,47 @@
             return true
           }
           return false;
-        }).map(function(item) {
-          return {
-            item: item,
-            texture: TEXTURE_CONTENT[item.id]
-          };
-        });
+        }).map(getItem);
       }
       else {
         var results = [];
       }
+
       searchResult.innerHTML = Handlebars.templates.search_results({results: results});
+      $('[data-toggle="tooltip"]', searchResult).tooltip()
     }, 150);
-  });
+  }).trigger('keyup');
 
   $(searchResult).on('click', 'button', function(e) {
-    // @TODO - remove active from others!
+    $('.active', search_result_wrapper).removeClass('active');
     e.target.className += ' active';
+
     var context = {
-      item: ITEMS[e.target.dataset.id],
+      item: getItem(e.target.dataset.id),
       recipes: (RECIPES[e.target.dataset.id] || []).map(function(recipe) {
+        var expandedRecipe = {};
+
         if (recipe.result) {
-          recipe.result.item = ITEMS[recipe.result.id]
+          expandedRecipe.result = getItem(recipe.result.id);
+          expandedRecipe.result.count = recipe.result.count;
         }
+
         if (recipe.ingredients) {
-          recipe.ingredients = recipe.ingredients.map(function(ingredient) {
-            return { item: ITEMS[ingredient], texture: TEXTURE_CONTENT[ingredient] };
-          })
+          expandedRecipe.ingredients = recipe.ingredients.map(getItem)
         }
+
         if (recipe.inShape) {
-          recipe.inShape = recipe.inShape.map(function(row) {
-            return row.map(function(col) {
-              return col === null ? null : { item: ITEMS[col], texture: TEXTURE_CONTENT[col] };
-            });
+          expandedRecipe.inShape = recipe.inShape.map(function(row) {
+            return row.map(getItem);
           }).reverse(); // For some reason, the rows are inverted. See: https://github.com/PrismarineJS/minecraft-data/issues/231
         }
-        return recipe;
+
+        return expandedRecipe;
       })
     };
 
     detailsWrapper.innerHTML = Handlebars.templates.details(context);
+    $('[data-toggle="tooltip"]', detailsWrapper).tooltip()
   });
 
 })(jQuery, Handlebars);

@@ -1,8 +1,8 @@
   {{#each results}}
     <button type="button" data-id="{{item.id}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
       {{item.displayName}}
-      {{#if texture}}
-        <img src="{{texture.texture}}" alt="{{texture.name}}" />
+      {{#if texture.texture}}
+        <img class="mc-item" src="{{texture.texture}}" alt="{{texture.name}}" />
       {{/if}}
     </button>
   {{else}}

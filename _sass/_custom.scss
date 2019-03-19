@@ -1,23 +1,11 @@
-
-#main-wrapper {
-  margin-top: 16em;
-}
-
-.in-shape-col {
-  img {
-    width: 32px;
-    height: 32px;
-    display: block;
-    image-rendering: pixelated;
-  }
+img.mc-item {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
 }
 
 #search_result_wrapper {
   button.list-group-item-action {
-    img {
-      transform: scale(2);
-      image-rendering: pixelated;
-    }
     &:focus {
       outline: 0;
     }

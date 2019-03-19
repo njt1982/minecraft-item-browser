@@ -1,42 +1,52 @@
 <h1>{{item.displayName}}</h1>
-<div class="recipes">
+<div class="recipes row">
   {{#if recipes}}
     {{#each recipes}}
-      <div class="recipe mb-4">
-        <span class="input">
-          {{#if ingredients}}
-            {{#each ingredients}}
-              <span>{{item.displayName}}</span>
-              {{#if texture}}
-                <img src="{{texture.texture}}" alt="{{texture.name}}" title="{{item.displayName}}" />
-              {{/if}}
-            {{/each}}
-          {{/if}}
+      <div class="col-sm-4 mb-3">
+        <div class="card recipe">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            {{#if result.texture}}
+              <img class="mc-item" src="{{result.texture.texture}}" alt="{{result.texture.name}}" title="{{result.item.displayName}}" data-toggle="tooltip" data-placement="top" title="{{result.item.displayName}}" />
+            {{/if}}
 
-          {{#if inShape}}
-            <table class="in-shape table table-bordered w-auto">
-            {{#each inShape}}
-              <tr class="in-shape-row">
-                {{#each this}}
-                  <td class="in-shape-col">
-                    {{#if this}}
-                      {{#if texture}}
-                        <img src="{{texture.texture}}" alt="{{texture.name}}" title="{{item.displayName}}" />
-                      {{/if}}
-                    {{else}}
-                      <span class="in-shape-empty"></span>
-                    {{/if}}
-                  </td>
+            <span>{{result.item.displayName}}</span>
+
+            <span class="badge badge-secondary">{{result.count}}</span>
+          </div>
+          <div class="card-body">
+            <span class="input">
+              {{#if ingredients}}
+                {{#each ingredients}}
+                  {{#if texture}}
+                    <img class="mc-item" src="{{texture.texture}}" alt="{{texture.name}}" title="{{item.displayName}}" data-toggle="tooltip" data-placement="top" title="{{item.displayName}}" />
+                  {{else}}
+                    <span>{{item.displayName}}</span>
+                  {{/if}}
                 {{/each}}
-              </tr>
-            {{/each}}
-            </table>
-          {{/if}}
-        </span>
-        =&gt;
-        <span class="output">
-          <span>{{result.item.displayName}}</span> (<span>{{result.count}}</span>)
-        </span>
+              {{/if}}
+
+              {{#if inShape}}
+                <table class="in-shape table table-bordered w-auto mx-auto">
+                {{#each inShape}}
+                  <tr class="in-shape-row">
+                    {{#each this}}
+                      <td class="in-shape-col">
+                        {{#if this}}
+                          {{#if texture}}
+                            <img class="mc-item" src="{{texture.texture}}" alt="{{texture.name}}" title="{{item.displayName}}"  data-toggle="tooltip" data-placement="top" title="{{item.displayName}}" />
+                          {{/if}}
+                        {{else}}
+                          <span class="in-shape-empty"></span>
+                        {{/if}}
+                      </td>
+                    {{/each}}
+                  </tr>
+                {{/each}}
+                </table>
+              {{/if}}
+            </span>
+          </div>
+        </div>
       </div>
     {{/each}}
   {{/if}}
