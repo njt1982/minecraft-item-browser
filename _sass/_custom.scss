@@ -2,3 +2,7 @@
 #main-wrapper {
   margin-top: 16em;
 }
+
+button.list-group-item-action:focus {
+  outline: 0;
+}

@@ -24,19 +24,26 @@
       keyUptTimeout = null;
       searchResult.innerHTML = '';
 
-      var resultSize = 0;
-      var results = ITEMS.filter(function(i) {
-        if (resultSize < 10 && i.displayName.toLowerCase().indexOf(searchText) !== -1) {
-          resultSize += 1;
-          return true
-        }
-        return false;
-      });
+      if (searchText.length > 0) {
+        var resultSize = 0;
+        var results = ITEMS.filter(function(i) {
+          if (resultSize < 10 && i.displayName.toLowerCase().indexOf(searchText) !== -1) {
+            resultSize += 1;
+            return true
+          }
+          return false;
+        });
+      }
+      else {
+        var results = [];
+      }
       searchResult.innerHTML = Handlebars.templates.search_results({results: results});
     }, 150);
   });
 
   $(searchResult).on('click', 'button', function(e) {
+    // @TODO - remove active from others!
+    e.target.className += ' active';
     var context = {
       item: ITEMS[e.target.dataset.id],
       recipes: (RECIPES[e.target.dataset.id] || []).map(function(recipe) {

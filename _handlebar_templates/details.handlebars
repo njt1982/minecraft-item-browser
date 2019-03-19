@@ -2,7 +2,7 @@
 <div class="recipes">
   {{#if recipes}}
     {{#each recipes}}
-      <div class="recipe">
+      <div class="recipe mb-4">
         <span class="input">
           {{#if ingredients}}
             {{#each ingredients}}
@@ -11,7 +11,7 @@
           {{/if}}
 
           {{#if inShape}}
-            <table class="in-shape">
+            <table class="in-shape d-inline-block">
             {{#each inShape}}
               <tr class="in-shape-row">
                 {{#each this}}
