@@ -1,0 +1,46 @@
+<div class="col-sm-4 mb-3">
+  <div class="card recipe">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      {{#if result.texture}}
+        {{> mc_image texture=result.texture item=result.item}}
+      {{/if}}
+
+      <span>{{result.item.displayName}}</span>
+
+      <span class="badge badge-secondary">{{result.count}}</span>
+    </div>
+    <div class="card-body">
+      <span class="input">
+        {{#if ingredients}}
+          {{#each ingredients}}
+            {{#if texture}}
+              {{> mc_image this}}
+            {{else}}
+              <span>{{item.displayName}}</span>
+            {{/if}}
+          {{/each}}
+        {{/if}}
+
+        {{#if inShape}}
+          <table class="in-shape table table-bordered w-auto mx-auto">
+          {{#each inShape}}
+            <tr class="in-shape-row">
+              {{#each this}}
+                <td class="in-shape-col">
+                  {{#if this}}
+                    {{#if texture}}
+                      {{> mc_image this}}
+                    {{/if}}
+                  {{else}}
+                    <span class="in-shape-empty"></span>
+                  {{/if}}
+                </td>
+              {{/each}}
+            </tr>
+          {{/each}}
+          </table>
+        {{/if}}
+      </span>
+    </div>
+  </div>
+</div>
