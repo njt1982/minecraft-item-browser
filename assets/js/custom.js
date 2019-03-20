@@ -25,10 +25,13 @@
       return acc;
     }, {});
 
+    /*
+    // Enable this for debugging on-load
     $searchBox.val('iron ingot').trigger('keyup');
     setTimeout(function() {
       $('button', searchResult).first().click();
     }, 200);
+    */
   });
 
   var getItem = function(item) {
