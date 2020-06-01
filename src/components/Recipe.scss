@@ -1,0 +1,42 @@
+.recipe {
+  .input-recipe {
+    > div {
+      display: flex;
+      > span {
+        @extend .invslot;
+      }
+    }
+  }
+
+  .card-header,
+  .card-body {
+    @extend .d-flex;
+    @extend .justify-content-between;
+    @extend .align-items-center;
+  }
+  .card-body {
+    padding: 0.5rem;
+    @include media-breakpoint-up(sm) {
+      padding: 1rem;
+    }
+
+    .fa-chevron-right {
+      font-size: 1rem;
+      margin: 0 0.25rem;
+      @include media-breakpoint-up(sm) {
+        font-size: 1.5rem;
+      }
+      @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+      }
+      color: $secondary;
+    }
+  }
+  .result {
+    @extend .d-flex;
+    @extend .align-items-center;
+    .count {
+      @extend .ml-2;
+    }
+  }
+}

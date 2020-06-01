@@ -1,0 +1,33 @@
+name: Build and Deploy site
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Install
+      uses: borales/actions-yarn@v2.0.0
+      with:
+        cmd: install
+    - name: Build
+      uses: borales/actions-yarn@v2.0.0
+      with:
+        cmd: build
+    - name: Install SSH Client
+      uses: webfactory/ssh-agent@v0.2.0
+      with:
+        ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        SSH: true
+        BRANCH: gh-pages
+        FOLDER: 'dist'
+        CLEAN: true
