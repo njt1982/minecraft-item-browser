@@ -1,0 +1,31 @@
+.recipe {
+  .input-recipe {
+    > div {
+      display: flex;
+      > span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+        height: 58px;
+        border: 1px solid #000;
+        border-width: 1px 0 0 1px;
+        &:last-child {
+          border-right-width: 1px;
+        }
+      }
+      &:last-child {
+        > span {
+          border-bottom-width: 1px;
+        }
+      }
+    }
+  }
+
+  .card-header,
+  .card-body {
+    @extend .d-flex;
+    @extend .justify-content-between;
+    @extend .align-items-center;
+  }
+}
