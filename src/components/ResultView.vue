@@ -11,7 +11,12 @@
     <div v-if="used_id.length" class="mb-4">
       <h2>Used In</h2>
       <div class="row">
-        <Recipe v-for="recipe in used_id" :key="recipe.id" :recipe="recipe" />
+        <Recipe
+          v-for="recipe in used_id"
+          :key="recipe.id"
+          :recipe="recipe"
+          showHeader
+        />
       </div>
     </div>
   </div>
@@ -25,7 +30,9 @@ import db from "@/database";
 import Recipe from "./Recipe";
 
 export default {
-  props: ["item"],
+  props: {
+    item: Object
+  },
   components: {
     Recipe
   },

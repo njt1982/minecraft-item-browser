@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "bootstrap": "^4.5.0",
-    "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
     "dexie": "^3.0.1",
     "font-awesome": "^4.7.0",

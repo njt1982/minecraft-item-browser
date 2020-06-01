@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-3">
+  <div class="col-md-3 mb-4">
     <h4>Search</h4>
     <div class="form-group">
       <div class="input-group">
@@ -27,7 +27,7 @@
         class="list-group-item"
       >
         {{ item.displayName }}
-        <img class="mc-block" :src="item.texture" />
+        <img class="mc-block ml-1" :src="item.texture" />
       </router-link>
     </div>
   </div>
@@ -38,7 +38,9 @@ import _debounce from "lodash/debounce";
 import db from "@/database";
 
 export default {
-  props: ["results"],
+  props: {
+    results: Array
+  },
   created() {
     if (this.$route.params.item_name) {
       let self = this;

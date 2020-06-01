@@ -8,6 +8,8 @@
 $headings-font-family: "Slabo 27px", Serif;
 $font-family-sans-serif: "Open Sans Condensed", sans-serif;
 $fa-font-path: "~font-awesome/fonts";
+$tooltip-font-size: 1.25rem;
+$tooltip-bg: rgba(0, 0, 0, 0.8);
 @import "~bootstrap";
 @import "~font-awesome/scss/font-awesome";
 
@@ -50,9 +52,31 @@ img.mc-block {
   width: 16px;
   height: 16px;
   image-rendering: pixelated;
-  @include media-breakpoint-up(sm) {
-    width: 48px;
-    height: 48px;
+  @include media-breakpoint-up(md) {
+    width: 24px;
+    height: 24px;
+  }
+  @include media-breakpoint-up(lg) {
+    width: 32px;
+    height: 32px;
+  }
+}
+.invslot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid;
+  border-color: #888 #eee #eee #888;
+  background: #ccc;
+  @include media-breakpoint-up(md) {
+    width: 36px;
+    height: 36px;
+  }
+  @include media-breakpoint-up(lg) {
+    width: 44px;
+    height: 44px;
   }
 }
 </style>

@@ -1,38 +1,26 @@
 <template>
-  <div class="col-md-6 mb-3" v-if="isReady">
+  <div class="col-6 col-xl-4 mb-3" v-if="isReady">
     <div class="card recipe">
-      <div class="card-header">
+      <div class="card-header" v-if="showHeader">
         <h4 class="mb-0">{{ createsItem.displayName }}</h4>
       </div>
       <div class="card-body d-flex">
         <div v-if="inputGrid" class="input-recipe">
           <div v-for="(row, index) in inputGrid" :key="index">
-            <span v-for="(col, index) in row" :key="index">
-              <router-link
-                :to="{
-                  name: 'Home',
-                  params: { item_name: getIngredientItem(col).name }
-                }"
-                class="mc-block"
-                v-if="col"
-              >
-                <img :src="getIngredientItem(col).texture" class="mc-block" />
-              </router-link>
+            <span class="invslot" v-for="(col, index) in row" :key="index">
+              <Item v-if="col" :item="getIngredientItem(col)" />
             </span>
           </div>
         </div>
 
         <i class="fa fa-chevron-right"></i>
 
-        <router-link
-          :to="{
-            name: 'Home',
-            params: { item_name: createsItem.name }
-          }"
-          class="mc-block"
-        >
-          <img class="mc-block" :src="createsItem.texture" />
-        </router-link>
+        <span class="result">
+          <Item class="invslot" :item="createsItem" />
+          <span class="count" v-if="recipe.result.count > 1">
+            {{ recipe.result.count }}
+          </span>
+        </span>
       </div>
     </div>
   </div>
@@ -40,9 +28,19 @@
 
 <script>
 import db from "@/database";
+import Item from "./Item";
 
 export default {
-  props: ["recipe"],
+  props: {
+    recipe: Object,
+    showHeader: {
+      type: Boolean,
+      default: false
+    }
+  },
+  components: {
+    Item
+  },
   data() {
     return {
       createsItem: undefined,
