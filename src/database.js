@@ -1,4 +1,5 @@
 /* eslint-env jquery */
+/* eslint-disable no-console */
 
 import Dexie from "dexie";
 
@@ -17,7 +18,7 @@ db.on("ready", function() {
     } else {
       console.log("Database is empty. Populating from ajax call...");
       let itemsPromise = new Promise(function(resolve, reject) {
-        $.ajax("/js/items.json", {
+        $.ajax("/minecraft-item-browser/js/items.json", {
           type: "get",
           dataType: "json",
           error: function(xhr, textStatus) {
@@ -31,7 +32,7 @@ db.on("ready", function() {
         });
       });
       let recipesPromise = new Promise(function(resolve, reject) {
-        $.ajax("/js/recipes.json", {
+        $.ajax("/minecraft-item-browser/js/recipes.json", {
           type: "get",
           dataType: "json",
           error: function(xhr, textStatus) {
@@ -62,7 +63,5 @@ db.on("ready", function() {
     }
   });
 });
-
-// const query = "";
 
 export default db;
