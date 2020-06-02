@@ -19,6 +19,7 @@
     "lodash": "^4.17.15",
     "popper.js": "^1.16.1",
     "vue": "^2.6.11",
+    "vue-analytics": "^5.22.1",
     "vue-router": "^3.2.0"
   },
   "devDependencies": {

@@ -21,6 +21,9 @@ export default {
       title: this.item.displayName,
       position: "top"
     });
+  },
+  beforeDestroy() {
+    $(this.$el).tooltip("dispose");
   }
 };
 </script>
