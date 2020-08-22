@@ -45,7 +45,11 @@ export default {
     if (this.$route.params.item_name) {
       let self = this;
       db.items.get({ name: this.$route.params.item_name }).then(result => {
-        self.mutableQuery = result.displayName;
+        if (result) {
+          self.mutableQuery = result.displayName;
+        } else {
+          self.mutableQuery = self.$route.params.item_name;
+        }
         self.$emit("runSearch", self.mutableQuery);
       });
     }

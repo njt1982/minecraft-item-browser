@@ -1,6 +1,6 @@
 // Update file from submodules
 
-const MC_VERSION = "1.15.2";
+const MC_VERSION = "1.16.1";
 const ITEMS_BASE_PATH = "PrismarineJS/minecraft-data/data/pc/" + MC_VERSION;
 const TEXTURES_BASE_PATH = "PrismarineJS/minecraft-assets/data/" + MC_VERSION;
 
