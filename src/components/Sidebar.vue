@@ -30,6 +30,9 @@
         <img class="mc-block ml-1" :src="item.texture" />
       </router-link>
     </div>
+    <button class="btn btn-danger mt-4" @click="resetDb">
+      Clear Cached DB
+    </button>
   </div>
 </template>
 
@@ -64,6 +67,12 @@ export default {
       return _debounce(function inputCaptured(e) {
         this.$emit("runSearch", e.srcElement.value);
       }, 50).bind(this);
+    }
+  },
+  methods: {
+    resetDb: function() {
+      db.delete();
+      location.reload();
     }
   }
 };

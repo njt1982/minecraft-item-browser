@@ -5,7 +5,12 @@
     <div v-if="creates.length" class="mb-4">
       <h2>Created By</h2>
       <div class="row">
-        <Recipe v-for="recipe in creates" :key="recipe.id" :recipe="recipe" />
+        <Recipe
+          v-for="recipe in creates"
+          :key="recipe.id"
+          :recipe="recipe"
+          :suggestedInput="item"
+        />
       </div>
     </div>
     <div v-if="used_id.length" class="mb-4">
@@ -15,6 +20,7 @@
           v-for="recipe in used_id"
           :key="recipe.id"
           :recipe="recipe"
+          :suggestedInput="item"
           showHeader
         />
       </div>

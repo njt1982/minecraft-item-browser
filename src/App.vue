@@ -10,6 +10,8 @@ $font-family-sans-serif: "Open Sans Condensed", sans-serif;
 $fa-font-path: "~font-awesome/fonts";
 $tooltip-font-size: 1.25rem;
 $tooltip-bg: rgba(0, 0, 0, 0.8);
+$input-btn-focus-width: 0;
+$input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet...
 @import "~bootstrap";
 @import "~font-awesome/scss/font-awesome";
 
@@ -52,13 +54,12 @@ img.mc-block {
   width: 16px;
   height: 16px;
   image-rendering: pixelated;
+  object-fit: cover;
   @include media-breakpoint-up(md) {
-    width: 24px;
-    height: 24px;
+    transform: scale(1.5);
   }
   @include media-breakpoint-up(lg) {
-    width: 32px;
-    height: 32px;
+    transform: scale(2);
   }
 }
 .invslot {

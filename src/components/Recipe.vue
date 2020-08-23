@@ -22,6 +22,9 @@
           </span>
         </span>
       </div>
+      <div class="card-footer text-muted">
+        {{ recipe.type }}
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +39,10 @@ export default {
     showHeader: {
       type: Boolean,
       default: false
+    },
+    suggestedInput: {
+      type: Object,
+      default: undefined
     }
   },
   components: {
@@ -52,23 +59,45 @@ export default {
       return !!this.createsItem && !!this.loadedIngredients;
     },
     inputGrid() {
-      let grid = [[], [], []];
-      for (var i = 0; i < 9; i++) {
-        let row = Math.floor(i / 3),
-          col = i % 3;
+      let grid = [[]];
+      if (
+        this.recipe.type === "crafting_shaped" ||
+        this.recipe.type === "crafting_shapeless"
+      ) {
+        grid = [[], [], []];
+        for (var i = 0; i < 9; i++) {
+          let row = Math.floor(i / 3),
+            col = i % 3;
 
-        // Item has specific shape, but its upside down (https://github.com/PrismarineJS/minecraft-data/issues/231)...
-        if (this.recipe.inShape) {
-          if (this.recipe.inShape[2 - row]) {
-            grid[row][col] = this.recipe.inShape[2 - row][col];
-          } else {
-            grid[row][col] = null;
+          // Item has specific shape, but its upside down (https://github.com/PrismarineJS/minecraft-data/issues/231)...
+          if (this.recipe.inShape) {
+            if (this.recipe.inShape[2 - row]) {
+              grid[row][col] = this.recipe.inShape[2 - row][col];
+            } else {
+              grid[row][col] = null;
+            }
+          }
+          // No shape, just list of ingredients (1-9) to gridyify
+          else if (this.recipe.ingredients) {
+            grid[row][col] = this.recipe.ingredients[i];
           }
         }
-        // No shape, just list of ingredients (1-9) to gridyify
-        else if (this.recipe.ingredients) {
-          grid[row][col] = this.recipe.ingredients[i];
+      } else if (
+        this.recipe.type === "smelting" ||
+        this.recipe.type === "blasting" ||
+        this.recipe.type === "stonecutting"
+      ) {
+        grid = [[]];
+        if (
+          this.suggestedInput &&
+          this.recipe.ingredients.indexOf(this.suggestedInput.id) !== -1
+        ) {
+          grid[0][0] = this.suggestedInput.id;
+        } else {
+          grid[0][0] = this.recipe.ingredients[0];
         }
+      } else if (this.recipe.type == "smithing") {
+        grid = [[this.recipe.base, this.recipe.addition]];
       }
       return grid;
     }
