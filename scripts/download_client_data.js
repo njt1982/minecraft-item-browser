@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const https = require("https");
 const fs = require("fs");
 
-const MC_VERSION = "1.16.2";
+const MC_VERSION = "1.16.4";
 
 console.log("Getting Manifest from Mojang");
 fetch("https://launchermeta.mojang.com/mc/game/version_manifest.json")

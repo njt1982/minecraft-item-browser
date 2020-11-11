@@ -17,6 +17,7 @@ $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet..
 
 @import "@/components/Sidebar.scss";
 @import "@/components/Recipe.scss";
+@import "@/components/Item.scss";
 
 @media (prefers-color-scheme: dark) {
   body {

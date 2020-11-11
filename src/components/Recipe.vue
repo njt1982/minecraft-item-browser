@@ -8,7 +8,7 @@
         <div v-if="inputGrid" class="input-recipe">
           <div v-for="(row, index) in inputGrid" :key="index">
             <span class="invslot" v-for="(col, index) in row" :key="index">
-              <Item v-if="col" :item="getIngredientItem(col)" />
+              <Item v-if="col != null" :item="getIngredientItem(col)" />
             </span>
           </div>
         </div>
@@ -22,8 +22,8 @@
           </span>
         </span>
       </div>
-      <div class="card-footer text-muted">
-        {{ recipe.type }}
+      <div class="card-footer">
+        <Item :item="this.craftingTableItem" v-bind:show-name="true" />
       </div>
     </div>
   </div>
@@ -51,12 +51,17 @@ export default {
   data() {
     return {
       createsItem: undefined,
-      loadedIngredients: undefined
+      loadedIngredients: undefined,
+      craftingTableItem: undefined
     };
   },
   computed: {
     isReady() {
-      return !!this.createsItem && !!this.loadedIngredients;
+      return (
+        this.createsItem != undefined &&
+        this.loadedIngredients != undefined &&
+        this.craftingTableItem != undefined
+      );
     },
     inputGrid() {
       let grid = [[]];
@@ -69,10 +74,9 @@ export default {
           let row = Math.floor(i / 3),
             col = i % 3;
 
-          // Item has specific shape, but its upside down (https://github.com/PrismarineJS/minecraft-data/issues/231)...
           if (this.recipe.inShape) {
-            if (this.recipe.inShape[2 - row]) {
-              grid[row][col] = this.recipe.inShape[2 - row][col];
+            if (this.recipe.inShape[row]) {
+              grid[row][col] = this.recipe.inShape[row][col];
             } else {
               grid[row][col] = null;
             }
@@ -85,6 +89,8 @@ export default {
       } else if (
         this.recipe.type === "smelting" ||
         this.recipe.type === "blasting" ||
+        this.recipe.type === "smoking" ||
+        this.recipe.type === "campfire_cooking" ||
         this.recipe.type === "stonecutting"
       ) {
         grid = [[]];
@@ -108,6 +114,19 @@ export default {
     }
   },
   created() {
+    const craftingTableMap = {
+      crafting_shapeless: "crafting_table",
+      crafting_shaped: "crafting_table", // Crafting Table
+      smelting: "furnace",
+      stonecutting: "stonecutter",
+      smithing: "smithing_table", // Smithing Table
+      blasting: "blast_furnace",
+      smoking: "smoker",
+      campfire_cooking: "campfire"
+    };
+    db.items.get({ name: craftingTableMap[this.recipe.type] }).then(item => {
+      this.craftingTableItem = item;
+    });
     db.items.get(this.recipe.result.id).then(item => {
       this.createsItem = item;
     });

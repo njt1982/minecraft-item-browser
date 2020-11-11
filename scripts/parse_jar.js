@@ -1,8 +1,7 @@
 const StreamZip = require("node-stream-zip");
 const fs = require("fs");
-const mcAssets = require("minecraft-assets")("1.16.1");
 
-const MC_VERSION = "1.16.2";
+const MC_VERSION = "1.16.4";
 
 const zip = new StreamZip({
   file: MC_VERSION + ".jar",
@@ -17,7 +16,7 @@ const writeJson = function(fileName, data, debug = false) {
 };
 
 const makeKey = function(s) {
-  return s.split(":")[1];
+  return s.split(":").pop();
 };
 
 const getItemKey = function(o) {
@@ -25,40 +24,121 @@ const getItemKey = function(o) {
     return makeKey(o);
   } else if (o.item) {
     return makeKey(o.item);
+  } else if (o.tag) {
+    return makeKey(o.tag);
   }
   return false;
 };
 
-const makeItem = function(item) {
-  if (item.tag) {
-    // @TODO
-    // console.log(item);
-  } else {
-    const k = getItemKey(item);
-    // We have an item key
-    if (k) {
-      // This item exists, return it,
-      if (items[k]) {
-        return items[k];
-      } else {
-        // Item template
-        const item = {
-          // New item! ID is it's offset in the hash.
-          id: Object.keys(items).length,
-          displayName: itemTitles[k],
-          name: k,
-          texture: mcAssets.textureContent[k].texture
-        };
-        // @TODO - load the texture!
-        // Add to the hash and return the item.
-        items[k] = item;
-        return item;
+const getTexturePathForKey = function(key) {
+  try {
+    key = makeKey(key);
+    const path = "assets/minecraft/models/" + key + ".json";
+    const data = JSON.parse(zip.entryDataSync(path).toString());
+
+    if (data.textures) {
+      const textureChoices = Object.keys(data.textures);
+      if (textureChoices.length > 1) {
+        console.log("Multiple choices: ", textureChoices);
+        if (data.textures.front) {
+          // Commonly for things like furnaces
+          return data.textures.front;
+        } else if (data.textures.side) {
+          // Bookshelf?
+          return data.textures.side;
+        } else if (data.textures.beacon) {
+          // Beacon is odd...
+          return data.textures.beacon;
+        } else if (key === "block/cartography_table") {
+          return data.textures.up;
+        }
       }
-    } else {
-      // If we get here there is an error handling the makeItem...
-      console.log("ERROR");
-      console.log(item);
+
+      // Everything else use the first...
+      return data.textures[textureChoices[0]];
+    } else if (data.parent) {
+      // TODO builtin
+      return getTexturePathForKey(data.parent);
     }
+  } catch (e) {
+    console.log("ERROR: ", e, ". For Key: ", key);
+  }
+  return null;
+};
+
+const getTexture = function(key) {
+  let texturePath = getTexturePathForKey(key);
+  try {
+    if (texturePath) {
+      // Strip any preceeding colon namespace (eg minecraft:item/blah)
+      texturePath = makeKey(texturePath);
+      texturePath = "assets/minecraft/textures/" + texturePath + ".png";
+      return zip.entryDataSync(texturePath).toString("base64");
+    } else {
+      throw new Error("Missing Texture!");
+    }
+  } catch (e) {
+    console.log("ERROR: ", e);
+    console.log("For key: ", key, ". For texturePath: ", texturePath);
+  }
+};
+
+const lookupItemFromTag = function(key) {
+  key = makeKey(key);
+  const path = "data/minecraft/tags/items/" + key + ".json";
+  let tagData = JSON.parse(zip.entryDataSync(path).toString());
+
+  // TODO - bit maff
+  // If the first tag (that we use) is a hash, then it is a tag itself... recurse!
+  if (tagData["values"][0][0] === "#") {
+    console.log("Nested tags for: ", key);
+    tagData = lookupItemFromTag(tagData["values"][0]);
+  }
+
+  return tagData;
+};
+
+const makeItem = function(sourceItem) {
+  const k = getItemKey(sourceItem);
+
+  // We have an item key
+  if (k) {
+    // This item exists, return it,
+    if (items[k]) {
+      return items[k];
+    } else {
+      // Item template
+      const item = {
+        // New item! ID is it's offset in the hash.
+        id: Object.keys(items).length,
+        name: k
+      };
+
+      let tagTextureKey = k;
+      if (sourceItem.tag) {
+        // @TODO
+        // console.log(sourceItem);
+        const tagData = lookupItemFromTag(k);
+        item.displayName = k; // @TODO - better name
+        tagTextureKey = makeKey(tagData["values"][0]);
+      } else {
+        item.displayName = itemTitles[k];
+      }
+
+      let prefix = "item";
+      if (tagTextureKey == "logs_that_burn") {
+        console.log("logs_that_burn", sourceItem);
+        prefix = "block";
+      }
+      item.texture = getTexture(prefix + "/" + tagTextureKey);
+
+      // Add to the hash and return the item.
+      items[k] = item;
+      return item;
+    }
+  } else {
+    // No key...
+    console.log("NO KEY ERROR: ", sourceItem);
   }
 };
 
@@ -75,6 +155,8 @@ const parseItemList = function(a) {
         m = makeItem(k);
         if (m) {
           list.push(m);
+        } else {
+          console.log("ERROR: Cant find item: " + k);
         }
       }
     }
@@ -82,6 +164,8 @@ const parseItemList = function(a) {
     m = makeItem(a);
     if (m) {
       list.push(m);
+    } else {
+      console.log("ERROR: Cant find item: " + a);
     }
   }
   return list;
@@ -110,6 +194,7 @@ zip.on("ready", () => {
       const data = JSON.parse(zip.entryDataSync(path).toString());
 
       if (data.type) {
+        console.log("PROCESSING: ", data.type, " : ", path);
         var recipe = {
           type: makeKey(data.type)
         };
@@ -121,13 +206,14 @@ zip.on("ready", () => {
           // Map the ingredient items to the key codes.
           var map = {};
           for (var k in data.key) {
-            const v = data.key[k];
+            let v = data.key[k];
             if (Array.isArray(v)) {
-              // @TODO - what about the array issue..
-              map[k] = null;
-            } else {
-              map[k] = ingredients.find(i => i.name == getItemKey(v));
+              // @TODO - This means the recipe has options for this slot
+              // Example: A torch can be made with coal or charchol above a stick. Or TNT with sand or red_sand.
+              console.log("WARNING: Array found for recipe for: ", k, v);
+              v = v.pop();
             }
+            map[k] = ingredients.find(i => i.name == getItemKey(v));
           }
 
           if (data.pattern) {
