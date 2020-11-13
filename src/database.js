@@ -3,10 +3,13 @@
 
 import Dexie from "dexie";
 
+// Dexie.delete('minecraft');
+
 const db = new Dexie("minecraft");
 db.version(1).stores({
-  items: "++id, &name, displayName, stackSize, texture",
-  recipes: "++id, *ingredients, *result.id, inShape, result"
+  items: "++id, &name, displayName, texture",
+  recipes:
+    "++id, *ingredients, *result.id, type, inShape, base, addition, result"
 });
 
 db.open();
@@ -55,7 +58,8 @@ db.on("ready", function() {
           return new Promise.all([
             db.items.bulkAdd(data[0]),
             db.recipes.bulkAdd(data[1])
-          ]);
+          ]).then(() => location.reload());
+          // @TODO - reload is a hack otherwise a preloaded search doesn't retrigger.
         })
         .then(function() {
           console.log("Done populating.");

@@ -1,0 +1,9 @@
+.item-link {
+  &:hover {
+    text-decoration: none;
+  }
+  span {
+    color: black;
+    margin-left: 16px;
+  }
+}

@@ -20,26 +20,31 @@
 
     <h4>Results</h4>
     <div class="list-group" id="search_results">
-      <router-link
+      <Item
         v-for="item in results"
         :key="item.id"
-        :to="{ name: 'Home', params: { item_name: item.name } }"
+        :item="item"
+        v-bind:show-name="true"
         class="list-group-item"
-      >
-        {{ item.displayName }}
-        <img class="mc-block ml-1" :src="item.texture" />
-      </router-link>
+      />
     </div>
+    <button class="btn btn-danger mt-4" @click="resetDb">
+      Clear Cached DB
+    </button>
   </div>
 </template>
 
 <script>
 import _debounce from "lodash/debounce";
 import db from "@/database";
+import Item from "./Item";
 
 export default {
   props: {
     results: Array
+  },
+  components: {
+    Item
   },
   created() {
     if (this.$route.params.item_name) {
@@ -64,6 +69,12 @@ export default {
       return _debounce(function inputCaptured(e) {
         this.$emit("runSearch", e.srcElement.value);
       }, 50).bind(this);
+    }
+  },
+  methods: {
+    resetDb: function() {
+      db.delete();
+      location.reload();
     }
   }
 };

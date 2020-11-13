@@ -2,7 +2,6 @@
   .list-group-item {
     @extend .list-group-item-action;
     @extend .d-flex;
-    @extend .justify-content-between;
     @extend .align-items-center;
     @include media-breakpoint-up(lg) {
       font-size: 1.2rem;
