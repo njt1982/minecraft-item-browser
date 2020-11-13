@@ -22,7 +22,7 @@
           </span>
         </span>
       </div>
-      <div class="card-footer">
+      <div class="card-footer" v-if="showFooter">
         <Item :item="this.craftingTableItem" v-bind:show-name="true" />
       </div>
     </div>
@@ -37,6 +37,10 @@ export default {
   props: {
     recipe: Object,
     showHeader: {
+      type: Boolean,
+      default: false
+    },
+    showFooter: {
       type: Boolean,
       default: false
     },

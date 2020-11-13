@@ -8,7 +8,8 @@ import Dexie from "dexie";
 const db = new Dexie("minecraft");
 db.version(1).stores({
   items: "++id, &name, displayName, texture",
-  recipes: "++id, *ingredients, *result.id, inShape, base, addition, result"
+  recipes:
+    "++id, *ingredients, *result.id, type, inShape, base, addition, result"
 });
 
 db.open();
