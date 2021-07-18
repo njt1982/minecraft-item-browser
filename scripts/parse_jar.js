@@ -1,7 +1,7 @@
 const StreamZip = require("node-stream-zip");
 const fs = require("fs");
 
-const MC_VERSION = "1.16.4";
+const MC_VERSION = "1.17.1";
 
 const zip = new StreamZip({
   file: MC_VERSION + ".jar",
