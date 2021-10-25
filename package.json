@@ -8,6 +8,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "sitemap": "node scripts/sitemap.mjs",
     "update": "node scripts/update.js",
     "download_client_data": "node scripts/download_client_data.mjs",
     "parse_jar": "node scripts/parse_jar.mjs"
@@ -21,6 +22,7 @@
     "lodash": "^4.17.19",
     "popper.js": "^1.16.1",
     "sass": "^1.43.3",
+    "sitemap": "^7.0.0",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
     "vue-router": "^3.2.0"

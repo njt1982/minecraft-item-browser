@@ -16,10 +16,14 @@ jobs:
       uses: borales/actions-yarn@v2.3.0
       with:
         cmd: install
-    - name: Build
+    - name: Build App
       uses: borales/actions-yarn@v2.3.0
       with:
         cmd: build
+    - name: Build Sitemap
+      uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: sitemap
     - name: Install SSH Client
       uses: webfactory/ssh-agent@v0.4.1
       with:
