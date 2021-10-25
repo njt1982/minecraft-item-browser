@@ -1,5 +1,5 @@
-const StreamZip = require("node-stream-zip");
-const fs = require("fs");
+import StreamZip from "node-stream-zip";
+import fs from "fs";
 
 const MC_VERSION = "1.17.1";
 

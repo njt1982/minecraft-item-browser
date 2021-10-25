@@ -1,6 +1,6 @@
-const fetch = require("node-fetch");
-const https = require("https");
-const fs = require("fs");
+import fetch from "node-fetch";
+import https from "https";
+import fs from "fs";
 
 const MC_VERSION = "1.17.1";
 

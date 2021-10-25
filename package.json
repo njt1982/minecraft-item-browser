@@ -9,8 +9,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "update": "node scripts/update.js",
-    "download_client_data": "node scripts/download_client_data.js",
-    "parse_jar": "node scripts/parse_jar.js"
+    "download_client_data": "node scripts/download_client_data.mjs",
+    "parse_jar": "node scripts/parse_jar.mjs"
   },
   "dependencies": {
     "bootstrap": "^4.5.0",
@@ -20,6 +20,7 @@
     "jquery": "^3.5.1",
     "lodash": "^4.17.19",
     "popper.js": "^1.16.1",
+    "sass": "^1.43.3",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
     "vue-router": "^3.2.0"
@@ -36,8 +37,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "lint-staged": "^9.5.0",
     "minecraft-assets": "^1.3.1",
-    "node-fetch": "^2.6.1",
-    "node-sass": "^4.14.1",
+    "node-fetch": "^3.0",
     "node-stream-zip": "^1.11.3",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
