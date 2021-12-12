@@ -22,3 +22,6 @@ pnpm-debug.log*
 *.sw?
 
 *.jar
+
+# This doesn't need to be committed - it is built during deploy
+public/sitemap.xml
