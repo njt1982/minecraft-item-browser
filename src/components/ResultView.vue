@@ -10,15 +10,16 @@
           :key="recipe.id"
           :recipe="recipe"
           :suggestedInput="item"
+          showFooter
         />
       </div>
     </div>
 
-    <div v-if="used_id.length" class="mb-4">
+    <div v-if="used_in.length" class="mb-4">
       <h2>Used In</h2>
       <div class="row">
         <Recipe
-          v-for="recipe in used_id"
+          v-for="recipe in used_in"
           :key="recipe.id"
           :recipe="recipe"
           :suggestedInput="item"
@@ -36,6 +37,8 @@
           :key="recipe.id"
           :recipe="recipe"
           :suggestedInput="item"
+          showHeader
+          showFooter
         />
       </div>
     </div>
@@ -59,7 +62,7 @@ export default {
   data() {
     return {
       created_by: [],
-      used_id: [],
+      used_in: [],
       creates: []
     };
   },
@@ -72,7 +75,8 @@ export default {
         smithing_table: ["smithing"],
         blast_furnace: ["blasting"],
         smoker: ["smoking"],
-        campfire: ["campfire_cooking"]
+        campfire: ["campfire_cooking"],
+        brewing_stand: ["brewing"]
       };
 
       let self = this;
@@ -89,7 +93,7 @@ export default {
         .equals(newItem.id)
         .toArray()
         .then(function(items) {
-          self.used_id = items;
+          self.used_in = items;
         });
 
       if (createsMapping[newItem.name]) {

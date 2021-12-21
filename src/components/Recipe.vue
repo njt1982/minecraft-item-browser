@@ -108,6 +108,8 @@ export default {
         }
       } else if (this.recipe.type == "smithing") {
         grid = [[this.recipe.base, this.recipe.addition]];
+      } else if (this.recipe.type == "brewing") {
+        grid = [[this.recipe.base, this.recipe.addition]];
       }
       return grid;
     }
@@ -126,7 +128,8 @@ export default {
       smithing: "smithing_table", // Smithing Table
       blasting: "blast_furnace",
       smoking: "smoker",
-      campfire_cooking: "campfire"
+      campfire_cooking: "campfire",
+      brewing: "brewing_stand"
     };
     db.items.get({ name: craftingTableMap[this.recipe.type] }).then(item => {
       this.craftingTableItem = item;
@@ -134,7 +137,6 @@ export default {
     db.items.get(this.recipe.result.id).then(item => {
       this.createsItem = item;
     });
-
     db.items.bulkGet(this.recipe.ingredients).then(items => {
       this.loadedIngredients = items;
     });
