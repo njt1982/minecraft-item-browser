@@ -3,7 +3,6 @@
     <router-view />
   </div>
 </template>
-
 <style lang="scss">
 $headings-font-family: "Slabo 27px", Serif;
 $font-family-sans-serif: "Open Sans Condensed", sans-serif;
@@ -14,6 +13,7 @@ $input-btn-focus-width: 0;
 $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet...
 @import "~bootstrap";
 @import "~font-awesome/scss/font-awesome";
+@import "~../public/css/textures.css";
 
 @import "@/components/Sidebar.scss";
 @import "@/components/Recipe.scss";
@@ -51,18 +51,6 @@ $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet..
     background-color: lighten(theme-color("dark"), 10);
   }
 }
-img.mc-block {
-  width: 16px;
-  height: 16px;
-  image-rendering: pixelated;
-  object-fit: cover;
-  @include media-breakpoint-up(md) {
-    transform: scale(1.5);
-  }
-  @include media-breakpoint-up(lg) {
-    transform: scale(2);
-  }
-}
 .invslot {
   display: flex;
   align-items: center;
@@ -72,6 +60,7 @@ img.mc-block {
   border: 2px solid;
   border-color: #888 #eee #eee #888;
   background: #ccc;
+
   @include media-breakpoint-up(md) {
     width: 36px;
     height: 36px;

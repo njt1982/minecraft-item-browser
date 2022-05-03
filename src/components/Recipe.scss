@@ -32,6 +32,16 @@
       color: $secondary;
     }
   }
+  .card-footer {
+    .item-link {
+      display: flex;
+      align-items: center;
+
+      .mc-block {
+        margin: 0;
+      }
+    }
+  }
   .result {
     @extend .d-flex;
     @extend .align-items-center;

@@ -16,7 +16,7 @@
         <i class="fa fa-chevron-right"></i>
 
         <span class="result">
-          <Item class="invslot" :item="createsItem" />
+          <div class="invslot"><Item :item="createsItem" /></div>
           <span class="count" v-if="recipe.result.count > 1">
             {{ recipe.result.count }}
           </span>

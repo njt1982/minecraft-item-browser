@@ -1,7 +1,7 @@
 import StreamZip from "node-stream-zip";
 import fs from "fs";
 
-const MC_VERSION = "1.18.1";
+const MC_VERSION = "1.18.2";
 
 const zip = new StreamZip({
   file: MC_VERSION + ".jar",
@@ -9,10 +9,43 @@ const zip = new StreamZip({
 });
 var itemTitles = {},
   items = {},
+  textures = [],
+  textureMap = {},
   recipes = [];
 
-const writeJson = function(fileName, data, debug = false) {
-  fs.writeFileSync(fileName, JSON.stringify(data, null, debug ? 2 : null));
+const effectColourMap = {
+  water: [55, 93, 196, 1.0],
+  awkward: [56, 91, 199, 1.0],
+  leaping: [32, 253, 76, 1.0],
+  fire_resistance: [224, 153, 54, 1.0],
+  slowness: [89, 107, 126, 1.0],
+  swiftness: [122, 174, 195, 1.0],
+  water_breathing: [47, 81, 152, 1.0],
+  healing: [245, 35, 35, 1.0],
+  harming: [67, 10, 9, 1.0],
+  poison: [78, 146, 48, 1.0],
+  night_vision: [30, 32, 154, 1.0],
+  invisibility: [126, 130, 144, 1.0],
+  regeneration: [241, 98, 252, 1.0],
+  strength: [145, 36, 35, 1.0],
+  weakness: [70, 76, 69, 1.0]
+};
+
+const writeJson = function(filename, data, debug = false) {
+  console.log("Writing JS: ", filename);
+  fs.writeFileSync(filename, JSON.stringify(data, null, debug ? 2 : null));
+};
+
+const writeCSS = function(filename, items) {
+  console.log("Writing CSS: ", filename);
+  fs.writeFileSync(filename, items.join("\n"));
+};
+
+const textureCss = function(textures) {
+  return textures.map(
+    (t, i) =>
+      ".texture-" + i + " { --imgUrl: url('data:image/png;base64," + t + "') }"
+  );
 };
 
 const makeKey = function(s) {
@@ -30,60 +63,72 @@ const getItemKey = function(o) {
   return false;
 };
 
-const getTexturePathForKey = function(key) {
+const getTexturePathsForKey = function(key) {
   try {
     key = makeKey(key);
     const path = "assets/minecraft/models/" + key + ".json";
     const data = JSON.parse(zip.entryDataSync(path).toString());
 
     if (data.textures) {
-      const textureChoices = Object.keys(data.textures);
-      if (textureChoices.length > 1) {
-        console.log("Multiple choices: ", textureChoices);
+      const textureKeys = Object.keys(data.textures);
+
+      if (textureKeys.length > 1) {
+        console.log("Multiple choices: ", textureKeys);
+
         if (data.textures.front) {
           // Commonly for things like furnaces
-          return data.textures.front;
+          return [data.textures.front];
         } else if (data.textures.side) {
           // Bookshelf?
-          return data.textures.side;
+          return [data.textures.side];
         } else if (data.textures.beacon) {
           // Beacon is odd...
-          return data.textures.beacon;
+          return [data.textures.beacon];
         } else if (key === "block/cartography_table") {
-          return data.textures.up;
-        } else if (textureChoices[0].indexOf("layer") === 0) {
+          return [data.textures.up];
+        } else if (textureKeys[0].indexOf("layer") === 0) {
           // This item has layered textures
-          // @TODO - work out how to layer... for now, pick bottom / last layer.
-          return data.textures[textureChoices.pop()];
+          return Object.values(data.textures);
         }
       }
 
       // Everything else use the first...
-      return data.textures[textureChoices[0]];
+      return [data.textures[textureKeys[0]]];
     } else if (data.parent) {
       // TODO builtin
-      return getTexturePathForKey(data.parent);
+      return getTexturePathsForKey(data.parent);
     }
   } catch (e) {
     console.log("ERROR LOADING MODEL: ", e, ". For Key: ", key);
   }
-  return null;
+  return [];
 };
 
-const getTexture = function(key) {
-  let texturePath = getTexturePathForKey(key);
+const makeTextures = function(key) {
+  if (textureMap[key]) {
+    return textureMap[key];
+  }
+
+  let texturePaths = getTexturePathsForKey(key);
   try {
-    if (texturePath) {
-      // Strip any preceeding colon namespace (eg minecraft:item/blah)
-      texturePath = makeKey(texturePath);
-      texturePath = "assets/minecraft/textures/" + texturePath + ".png";
-      return zip.entryDataSync(texturePath).toString("base64");
+    if (texturePaths.length) {
+      const textureIds = [];
+      texturePaths.forEach(texturePath => {
+        // Strip any preceeding colon namespace (eg minecraft:item/blah)
+        const key = makeKey(texturePath);
+        const path = "assets/minecraft/textures/" + key + ".png";
+        const idx = textures.push(zip.entryDataSync(path).toString("base64"));
+        textureIds.push(idx - 1);
+      });
+
+      textureMap[key] = textureIds;
+      return textureIds;
     } else {
       throw new Error("Missing Texture!");
     }
   } catch (e) {
     console.log("ERROR LOADING TEXTURE: ", e);
-    console.log("For key: ", key, ". For texturePath: ", texturePath);
+    console.log("For key: ", key, ". For texturePaths: ", texturePaths);
   }
 };
 
@@ -117,7 +162,8 @@ const makeItem = function(sourceItem) {
         id: Object.keys(items).length,
         name: k,
         displayName: itemTitles[k],
-        texture: undefined
+        textures: undefined,
+        tint: undefined
       };
 
       let tagTextureKey = k;
@@ -128,10 +174,18 @@ const makeItem = function(sourceItem) {
       } else if (tagTextureKey.indexOf(".") !== -1) {
         // If the texture key contains a dot, we assume its an "effects" item for now.
         // @TODO - this isn't entirely right, but it builds the JSON for now...
+        const effectName = tagTextureKey.split(".").pop();
+
+        // Pull out the first part (eg potion) as thats the texture key.
         tagTextureKey = tagTextureKey.split(".")[0];
+
+        // Apply a tint to layer 0 based on the effectName
+        if (effectColourMap[effectName]) {
+          item.tint = [effectColourMap[effectName]];
+        }
       }
 
-      item.texture = getTexture("item/" + tagTextureKey);
+      item.textures = makeTextures("item/" + tagTextureKey);
 
       // Add to the hash and return the item.
       items[k] = item;
@@ -338,9 +392,8 @@ zip.on("ready", () => {
     );
   });
 
-  items = Object.values(items);
-  writeJson("public/js/items.json", items);
-
+  writeJson("public/js/items.json", Object.values(items));
   writeJson("public/js/recipes.json", recipes);
+  writeCSS("public/css/textures.css", textureCss(textures));
   zip.close();
 });

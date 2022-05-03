@@ -1,9 +1,33 @@
 .item-link {
+  position: relative;
+
   &:hover {
     text-decoration: none;
   }
+
   span {
     color: black;
-    margin-left: 16px;
+    margin-left: 32px;
+  }
+
+  .mc-block {
+    position: absolute;
+    margin-top: -8px;
+    margin-left: -8px;
+    width: 16px;
+    height: 16px;
+    image-rendering: pixelated;
+    background-size: cover;
+    background-image: var(--imgUrl);
+    -webkit-mask-image: var(--imgUrl);
+    mask-image: var(--imgUrl);
+    background-blend-mode: multiply;
+
+    @include media-breakpoint-up(md) {
+      transform: scale(1.5);
+    }
+    @include media-breakpoint-up(lg) {
+      transform: scale(2);
+    }
   }
 }

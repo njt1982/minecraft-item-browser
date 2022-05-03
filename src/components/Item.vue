@@ -6,8 +6,14 @@
     }"
     class="item-link"
     :data-item-id="item.id"
+    :title="item.displayName"
   >
-    <img v-bind:src="textureSrc()" :alt="item.displayName" class="mc-block" />
+    <div
+      v-for="(tid, index) in item.textures"
+      :key="tid"
+      :class="`mc-block texture-${tid}`"
+      :style="textureStyles(index)"
+    />
     <span v-if="showName" class="text-muted">{{ item.displayName }}</span>
   </router-link>
 </template>
@@ -17,15 +23,23 @@
 
 export default {
   props: {
-    item: Object,
+    item: {
+      type: Object,
+      required: true
+    },
     showName: {
       type: Boolean,
       default: false
     }
   },
   methods: {
-    textureSrc() {
-      return "data:image/png;base64," + this.item.texture;
+    textureStyles: function(layer) {
+      const styles = {};
+      if (this.item.tint && this.item.tint[layer]) {
+        styles.backgroundColor =
+          "rgba(" + this.item.tint[layer].join(",") + ")";
+      }
+      return styles;
     }
   },
   mounted() {
