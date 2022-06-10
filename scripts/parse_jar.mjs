@@ -1,7 +1,7 @@
 import StreamZip from "node-stream-zip";
 import fs from "fs";
 
-const MC_VERSION = "1.18.2";
+const MC_VERSION = "1.19";
 
 const zip = new StreamZip({
   file: MC_VERSION + ".jar",
@@ -84,8 +84,16 @@ const getTexturePathsForKey = function(key) {
         } else if (data.textures.beacon) {
           // Beacon is odd...
           return [data.textures.beacon];
-        } else if (key === "block/cartography_table") {
+        } else if (
+          [
+            "block/cartography_table",
+            "block/crafting_table",
+            "block/fletching_table"
+          ].includes(key)
+        ) {
           return [data.textures.up];
+        } else if (["block/smithing_table"].includes(key)) {
+          return [data.textures.south];
         } else if (textureKeys[0].indexOf("layer") === 0) {
           // This item has layered textures
           return Object.values(data.textures);

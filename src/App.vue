@@ -50,6 +50,12 @@ $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet..
   .card-header {
     background-color: lighten(theme-color("dark"), 10);
   }
+  .text-muted {
+    color: theme-color("light") !important;
+  }
+}
+.tooltip {
+  top: -16px !important;
 }
 .invslot {
   display: flex;
