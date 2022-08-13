@@ -6,13 +6,11 @@
 <style lang="scss">
 $headings-font-family: "Slabo 27px", Serif;
 $font-family-sans-serif: "Open Sans Condensed", sans-serif;
-$fa-font-path: "~font-awesome/fonts";
 $tooltip-font-size: 1.25rem;
 $tooltip-bg: rgba(0, 0, 0, 0.8);
 $input-btn-focus-width: 0;
 $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet...
 @import "~bootstrap";
-@import "~font-awesome/scss/font-awesome";
 @import "~../public/css/textures.css";
 
 @import "@/components/McSidebar.scss";
