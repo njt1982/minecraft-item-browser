@@ -1,26 +1,26 @@
 <template>
   <div class="container">
     <div class="row">
-      <Sidebar v-on:runSearch="updateQuery" :results="results" />
-      <ResultView :item="selectedItem" />
+      <McSidebar v-on:runSearch="updateQuery" :results="results" />
+      <McResultView :item="selectedItem" />
     </div>
   </div>
 </template>
 
 <script>
-import Sidebar from "@/components/Sidebar.vue";
-import ResultView from "@/components/ResultView.vue";
+import McSidebar from "@/components/McSidebar.vue";
+import McResultView from "@/components/McResultView.vue";
 import db from "@/database";
 
 export default {
   components: {
-    Sidebar,
-    ResultView
+    McSidebar,
+    McResultView,
   },
   data() {
     return {
       results: [],
-      selectedItem: undefined
+      selectedItem: undefined,
     };
   },
   methods: {
@@ -30,16 +30,16 @@ export default {
         let regex = new RegExp(query, "i");
 
         db.items
-          .filter(item => regex.test(item.displayName))
+          .filter((item) => regex.test(item.displayName))
           .limit(10)
           .toArray()
-          .then(function(results) {
+          .then(function (results) {
             self.results = results;
           });
       } else {
         this.results = [];
       }
-    }
+    },
   },
   watch: {
     "$route.params": {
@@ -54,13 +54,13 @@ export default {
           .where("name")
           .equals(routeParams.item_name)
           .first()
-          .then(function(item) {
+          .then(function (item) {
             if (item) {
               self.selectedItem = item;
             }
           });
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>

@@ -11,27 +11,31 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+
     - name: Install
       uses: borales/actions-yarn@v3.0.0
       with:
         cmd: install
+
     - name: Build App
       uses: borales/actions-yarn@v3.0.0
       with:
         cmd: build
+
     - name: Build Sitemap
       uses: borales/actions-yarn@v3.0.0
       with:
         cmd: sitemap
+
     - name: Install SSH Client
       uses: webfactory/ssh-agent@v0.5.4
       with:
         ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
     - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      uses: JamesIves/github-pages-deploy-action@v4.4.0
       with:
         ssh-key: true
-        branch: gh-pages
         folder: 'dist'
         clean: true

@@ -5,7 +5,7 @@
     <div v-if="created_by.length" class="mb-4">
       <h2>Created By</h2>
       <div class="row">
-        <Recipe
+        <McRecipe
           v-for="recipe in created_by"
           :key="recipe.id"
           :recipe="recipe"
@@ -18,7 +18,7 @@
     <div v-if="used_in.length" class="mb-4">
       <h2>Used In</h2>
       <div class="row">
-        <Recipe
+        <McRecipe
           v-for="recipe in used_in"
           :key="recipe.id"
           :recipe="recipe"
@@ -32,7 +32,7 @@
     <div v-if="creates.length" class="mb-4">
       <h2>Creates</h2>
       <div class="row">
-        <Recipe
+        <McRecipe
           v-for="recipe in creates"
           :key="recipe.id"
           :recipe="recipe"
@@ -50,24 +50,24 @@
 
 <script>
 import db from "@/database";
-import Recipe from "./Recipe";
+import McRecipe from "./McRecipe";
 
 export default {
   props: {
-    item: Object
+    item: Object,
   },
   components: {
-    Recipe
+    McRecipe,
   },
   data() {
     return {
       created_by: [],
       used_in: [],
-      creates: []
+      creates: [],
     };
   },
   watch: {
-    item: function(newItem) {
+    item: function (newItem) {
       const createsMapping = {
         crafting_table: ["crafting_shapeless", "crafting_shaped"],
         furnace: ["smelting"],
@@ -76,7 +76,7 @@ export default {
         blast_furnace: ["blasting"],
         smoker: ["smoking"],
         campfire: ["campfire_cooking"],
-        brewing_stand: ["brewing"]
+        brewing_stand: ["brewing"],
       };
 
       let self = this;
@@ -84,7 +84,7 @@ export default {
         .where("result.id")
         .equals(newItem.id)
         .toArray()
-        .then(function(items) {
+        .then(function (items) {
           self.created_by = items;
         });
 
@@ -92,7 +92,7 @@ export default {
         .where("ingredients")
         .equals(newItem.id)
         .toArray()
-        .then(function(items) {
+        .then(function (items) {
           self.used_in = items;
         });
 
@@ -101,13 +101,13 @@ export default {
           .where("type")
           .anyOf(createsMapping[newItem.name])
           .toArray()
-          .then(function(items) {
+          .then(function (items) {
             self.creates = items;
           });
       } else {
         this.creates = [];
       }
-    }
-  }
+    },
+  },
 };
 </script>

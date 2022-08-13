@@ -1,25 +1,16 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import VueAnalytics from "vue-analytics";
-import Home from "@/views/Home.vue";
+import { createRouter, createWebHashHistory } from "vue-router";
+import McHome from "@/views/McHome.vue";
 
-Vue.use(VueRouter);
-
-const router = new VueRouter({
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/:item_name?",
       name: "Home",
-      component: Home,
-      props: true
-    }
-  ]
-});
-
-Vue.use(VueAnalytics, {
-  id: "UA-527778-21",
-  router
+      component: McHome,
+      props: true,
+    },
+  ],
 });
 
 export default router;

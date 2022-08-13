@@ -20,16 +20,16 @@
       padding: 1rem;
     }
 
-    .fa-chevron-right {
-      font-size: 1rem;
-      margin: 0 0.25rem;
+    svg.chevron-right {
+      height: 1rem;
+      margin: 0 0.5rem;
       @include media-breakpoint-up(sm) {
-        font-size: 1.5rem;
+        height: 1.5rem;
       }
       @include media-breakpoint-up(lg) {
-        font-size: 2rem;
+        height: 2rem;
       }
-      color: $secondary;
+      fill: $secondary;
     }
   }
   .card-footer {

@@ -8,3 +8,11 @@
     }
   }
 }
+#search_form {
+  .input-group-prepend {
+    svg {
+      height: 1rem;
+      fill: $secondary;
+    }
+  }
+}
