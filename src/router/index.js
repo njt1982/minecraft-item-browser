@@ -1,12 +1,8 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import VueAnalytics from "vue-analytics";
+import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "@/views/Home.vue";
 
-Vue.use(VueRouter);
-
-const router = new VueRouter({
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/:item_name?",
@@ -15,11 +11,6 @@ const router = new VueRouter({
       props: true
     }
   ]
-});
-
-Vue.use(VueAnalytics, {
-  id: "UA-527778-21",
-  router
 });
 
 export default router;
