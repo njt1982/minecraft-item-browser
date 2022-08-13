@@ -8,7 +8,7 @@
         <div v-if="inputGrid" class="input-recipe">
           <div v-for="(row, index) in inputGrid" :key="index">
             <span class="invslot" v-for="(col, index) in row" :key="index">
-              <Item v-if="col != null" :item="getIngredientItem(col)" />
+              <McItem v-if="col != null" :item="getIngredientItem(col)" />
             </span>
           </div>
         </div>
@@ -16,14 +16,14 @@
         <i class="fa fa-chevron-right"></i>
 
         <span class="result">
-          <div class="invslot"><Item :item="createsItem" /></div>
+          <div class="invslot"><McItem :item="createsItem" /></div>
           <span class="count" v-if="recipe.result.count > 1">
             {{ recipe.result.count }}
           </span>
         </span>
       </div>
       <div class="card-footer" v-if="showFooter">
-        <Item :item="this.craftingTableItem" v-bind:show-name="true" />
+        <McItem :item="this.craftingTableItem" v-bind:show-name="true" />
       </div>
     </div>
   </div>
@@ -31,32 +31,32 @@
 
 <script>
 import db from "@/database";
-import Item from "./Item";
+import McItem from "./McItem";
 
 export default {
   props: {
     recipe: Object,
     showHeader: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showFooter: {
       type: Boolean,
-      default: false
+      default: false,
     },
     suggestedInput: {
       type: Object,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   components: {
-    Item
+    McItem,
   },
   data() {
     return {
       createsItem: undefined,
       loadedIngredients: undefined,
-      craftingTableItem: undefined
+      craftingTableItem: undefined,
     };
   },
   computed: {
@@ -112,12 +112,12 @@ export default {
         grid = [[this.recipe.base, this.recipe.addition]];
       }
       return grid;
-    }
+    },
   },
   methods: {
     getIngredientItem(id) {
-      return this.loadedIngredients.find(loadedItem => loadedItem.id == id);
-    }
+      return this.loadedIngredients.find((loadedItem) => loadedItem.id == id);
+    },
   },
   created() {
     const craftingTableMap = {
@@ -129,17 +129,17 @@ export default {
       blasting: "blast_furnace",
       smoking: "smoker",
       campfire_cooking: "campfire",
-      brewing: "brewing_stand"
+      brewing: "brewing_stand",
     };
-    db.items.get({ name: craftingTableMap[this.recipe.type] }).then(item => {
+    db.items.get({ name: craftingTableMap[this.recipe.type] }).then((item) => {
       this.craftingTableItem = item;
     });
-    db.items.get(this.recipe.result.id).then(item => {
+    db.items.get(this.recipe.result.id).then((item) => {
       this.createsItem = item;
     });
-    db.items.bulkGet(this.recipe.ingredients).then(items => {
+    db.items.bulkGet(this.recipe.ingredients).then((items) => {
       this.loadedIngredients = items;
     });
-  }
+  },
 };
 </script>

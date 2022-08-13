@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Home from "@/views/Home.vue";
+import McHome from "@/views/McHome.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -7,10 +7,10 @@ const router = createRouter({
     {
       path: "/:item_name?",
       name: "Home",
-      component: Home,
-      props: true
-    }
-  ]
+      component: McHome,
+      props: true,
+    },
+  ],
 });
 
 export default router;

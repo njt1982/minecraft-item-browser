@@ -2,7 +2,7 @@
   <router-link
     :to="{
       name: 'Home',
-      params: { item_name: item.name }
+      params: { item_name: item.name },
     }"
     class="item-link"
     :data-item-id="item.id"
@@ -25,33 +25,33 @@ export default {
   props: {
     item: {
       type: Object,
-      required: true
+      required: true,
     },
     showName: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
-    textureStyles: function(layer) {
+    textureStyles: function (layer) {
       const styles = {};
       if (this.item.tint && this.item.tint[layer]) {
         styles.backgroundColor =
           "rgba(" + this.item.tint[layer].join(",") + ")";
       }
       return styles;
-    }
+    },
   },
   mounted() {
     if (!this.showName) {
       $(this.$el).tooltip({
         title: this.item.displayName,
-        position: "top"
+        position: "top",
       });
     }
   },
   beforeUnmount() {
     $(this.$el).tooltip("dispose");
-  }
+  },
 };
 </script>

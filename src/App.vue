@@ -15,9 +15,9 @@ $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet..
 @import "~font-awesome/scss/font-awesome";
 @import "~../public/css/textures.css";
 
-@import "@/components/Sidebar.scss";
-@import "@/components/Recipe.scss";
-@import "@/components/Item.scss";
+@import "@/components/McSidebar.scss";
+@import "@/components/McRecipe.scss";
+@import "@/components/McItem.scss";
 
 @media (prefers-color-scheme: dark) {
   body {
@@ -105,6 +105,6 @@ $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet..
 
 <script>
 export default {
-  name: "app"
+  name: "app",
 };
 </script>

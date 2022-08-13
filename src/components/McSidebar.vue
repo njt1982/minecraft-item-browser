@@ -20,7 +20,7 @@
 
     <h4>Results</h4>
     <div class="list-group" id="search_results">
-      <Item
+      <McItem
         v-for="item in results"
         :key="item.id"
         :item="item"
@@ -37,19 +37,19 @@
 <script>
 import _debounce from "lodash/debounce";
 import db from "@/database";
-import Item from "./Item";
+import McItem from "./McItem";
 
 export default {
   props: {
-    results: Array
+    results: Array,
   },
   components: {
-    Item
+    McItem,
   },
   created() {
     if (this.$route.params.item_name) {
       let self = this;
-      db.items.get({ name: this.$route.params.item_name }).then(result => {
+      db.items.get({ name: this.$route.params.item_name }).then((result) => {
         if (result) {
           self.mutableQuery = result.displayName;
         } else {
@@ -61,7 +61,7 @@ export default {
   },
   data() {
     return {
-      mutableQuery: ""
+      mutableQuery: "",
     };
   },
   computed: {
@@ -69,13 +69,13 @@ export default {
       return _debounce(function inputCaptured(e) {
         this.$emit("runSearch", e.srcElement.value);
       }, 50).bind(this);
-    }
+    },
   },
   methods: {
-    resetDb: function() {
+    resetDb: function () {
       db.delete();
       location.reload();
-    }
-  }
+    },
+  },
 };
 </script>
