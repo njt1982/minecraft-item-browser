@@ -9,7 +9,6 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "sitemap": "node scripts/sitemap.mjs",
-    "update": "node scripts/update.js",
     "download_client_data": "node scripts/download_client_data.mjs",
     "parse_jar": "node scripts/parse_jar.mjs"
   },
