@@ -1,11 +1,11 @@
 import StreamZip from "node-stream-zip";
 import fs from "fs";
 
-const MC_VERSION = "1.19";
+const MC_VERSION = "1.19.3";
 
 const zip = new StreamZip({
   file: MC_VERSION + ".jar",
-  storeEntries: true
+  storeEntries: true,
 });
 var itemTitles = {},
   items = {},
@@ -28,31 +28,31 @@ const effectColourMap = {
   invisibility: [126, 130, 144, 1.0],
   regeneration: [241, 98, 252, 1.0],
   strength: [145, 36, 35, 1.0],
-  weakness: [70, 76, 69, 1.0]
+  weakness: [70, 76, 69, 1.0],
 };
 
-const writeJson = function(filename, data, debug = false) {
+const writeJson = (filename, data, debug = false) => {
   console.log("Writing JS: ", filename);
   fs.writeFileSync(filename, JSON.stringify(data, null, debug ? 2 : null));
 };
 
-const writeCSS = function(filename, items) {
+const writeCSS = (filename, items) => {
   console.log("Writing CSS: ", filename);
   fs.writeFileSync(filename, items.join("\n"));
 };
 
-const textureCss = function(textures) {
+const textureCss = (textures) => {
   return textures.map(
     (t, i) =>
       ".texture-" + i + " { --imgUrl: url('data:image/png;base64," + t + "') }"
   );
 };
 
-const makeKey = function(s) {
+const makeKey = (s) => {
   return s.split(":").pop();
 };
 
-const getItemKey = function(o) {
+const getItemKey = (o) => {
   if (typeof o == "string") {
     return makeKey(o);
   } else if (o.item) {
@@ -63,7 +63,7 @@ const getItemKey = function(o) {
   return false;
 };
 
-const getTexturePathsForKey = function(key) {
+const getTexturePathsForKey = (key) => {
   try {
     key = makeKey(key);
     const path = "assets/minecraft/models/" + key + ".json";
@@ -88,7 +88,7 @@ const getTexturePathsForKey = function(key) {
           [
             "block/cartography_table",
             "block/crafting_table",
-            "block/fletching_table"
+            "block/fletching_table",
           ].includes(key)
         ) {
           return [data.textures.up];
@@ -112,7 +112,7 @@ const getTexturePathsForKey = function(key) {
   return [];
 };
 
-const makeTextures = function(key) {
+const makeTextures = (key) => {
   if (textureMap[key]) {
     return textureMap[key];
   }
@@ -121,7 +121,7 @@ const makeTextures = function(key) {
   try {
     if (texturePaths.length) {
       const textureIds = [];
-      texturePaths.forEach(texturePath => {
+      texturePaths.forEach((texturePath) => {
         // Strip any preceeding colon namespace (eg minecraft:item/blah)
         const key = makeKey(texturePath);
         const path = "assets/minecraft/textures/" + key + ".png";
@@ -140,7 +140,7 @@ const makeTextures = function(key) {
   }
 };
 
-const lookupItemFromTag = function(key) {
+const lookupItemFromTag = (key) => {
   key = makeKey(key);
   const path = "data/minecraft/tags/items/" + key + ".json";
   let tagData = JSON.parse(zip.entryDataSync(path).toString());
@@ -155,7 +155,7 @@ const lookupItemFromTag = function(key) {
   return tagData;
 };
 
-const makeItem = function(sourceItem) {
+const makeItem = (sourceItem) => {
   const k = getItemKey(sourceItem);
 
   // We have an item key
@@ -171,7 +171,7 @@ const makeItem = function(sourceItem) {
         name: k,
         displayName: itemTitles[k],
         textures: undefined,
-        tint: undefined
+        tint: undefined,
       };
 
       let tagTextureKey = k;
@@ -205,7 +205,7 @@ const makeItem = function(sourceItem) {
   }
 };
 
-const makeRecipe = function(data, path) {
+const makeRecipe = (data, path) => {
   console.log("PROCESSING: ", data.type, " : ", path);
 
   var recipe = {
@@ -215,12 +215,12 @@ const makeRecipe = function(data, path) {
     inShape: undefined,
     base: undefined,
     addition: undefined,
-    result: undefined
+    result: undefined,
   };
 
   if (data.type == "minecraft:crafting_shaped") {
     const ingredients = parseItemList(Object.values(data.key));
-    recipe.ingredients = ingredients.map(i => i.id);
+    recipe.ingredients = ingredients.map((i) => i.id);
 
     // Map the ingredient items to the key codes.
     var map = {};
@@ -232,32 +232,32 @@ const makeRecipe = function(data, path) {
         console.log("WARNING: Array found for recipe for: ", k, v);
         v = v.pop();
       }
-      map[k] = ingredients.find(i => i.name == getItemKey(v));
+      map[k] = ingredients.find((i) => i.name == getItemKey(v));
     }
 
     if (data.pattern) {
-      recipe.inShape = data.pattern.map(row => {
-        return row.split("").map(col => {
+      recipe.inShape = data.pattern.map((row) => {
+        return row.split("").map((col) => {
           return map[col] ? map[col].id : null;
         });
       });
     }
   } else if (data.type == "minecraft:crafting_shapeless") {
-    recipe.ingredients = parseItemList(data.ingredients).map(i => i.id);
+    recipe.ingredients = parseItemList(data.ingredients).map((i) => i.id);
   } else if (data.type === "minecraft:smelting") {
-    recipe.ingredients = parseItemList(data.ingredient).map(i => i.id);
+    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
   } else if (data.type == "minecraft:stonecutting") {
-    recipe.ingredients = parseItemList(data.ingredient).map(i => i.id);
+    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
   } else if (data.type == "minecraft:smithing") {
     recipe.base = makeItem(data.base).id;
     recipe.addition = makeItem(data.addition).id;
     recipe.ingredients = [recipe.base, recipe.addition];
   } else if (data.type == "minecraft:blasting") {
-    recipe.ingredients = parseItemList(data.ingredient).map(i => i.id);
+    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
   } else if (data.type == "minecraft:smoking") {
-    recipe.ingredients = parseItemList(data.ingredient).map(i => i.id);
+    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
   } else if (data.type == "minecraft:campfire_cooking") {
-    recipe.ingredients = parseItemList(data.ingredient).map(i => i.id);
+    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
   } else if (data.type == "minecraft:brewing") {
     recipe.base = makeItem(data.base).id;
     recipe.ingredients.push(recipe.base);
@@ -272,14 +272,14 @@ const makeRecipe = function(data, path) {
 
   recipe.result = {
     id: makeItem(data.result).id,
-    count: data.result.count ? data.result.count : 1
+    count: data.result.count ? data.result.count : 1,
   };
 
   recipes.push(recipe);
   return recipe;
 };
 
-const parseItemList = function(a) {
+const parseItemList = (a) => {
   var list = [],
     m;
   if (Array.isArray(a)) {
@@ -314,7 +314,8 @@ zip.on("ready", () => {
   const lang = JSON.parse(
     zip.entryDataSync("assets/minecraft/lang/en_us.json").toString()
   );
-  const filterRegex = /^(block|item)\.minecraft\.(?<name>([^\\.]+|(tipped_arrow|potion|splash_potion|lingering_potion)\.effect\..+))$/;
+  const filterRegex =
+    /^(block|item)\.minecraft\.(?<name>([^\\.]+|(tipped_arrow|potion|splash_potion|lingering_potion)\.effect\..+))$/;
   var m;
   for (const key of Object.keys(lang).sort()) {
     if ((m = key.match(filterRegex))) {
