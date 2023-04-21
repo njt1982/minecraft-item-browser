@@ -1,10 +1,8 @@
 import StreamZip from "node-stream-zip";
 import fs from "fs";
 
-const MC_VERSION = "1.19.3";
-
 const zip = new StreamZip({
-  file: MC_VERSION + ".jar",
+  file: "client.jar",
   storeEntries: true,
 });
 var itemTitles = {},
