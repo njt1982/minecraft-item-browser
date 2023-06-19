@@ -25,7 +25,6 @@ export default {
   },
   methods: {
     setSelectedItem(item) {
-      console.log("SET ITEM", item);
       this.selectedItem = item;
     },
     updateQuery(query) {
@@ -54,7 +53,6 @@ export default {
         }
 
         db.items.get({ name: routeParams.item_name }).then((item) => {
-          console.log("Found Item: ", item);
           if (item) {
             this.setSelectedItem(item);
           }
