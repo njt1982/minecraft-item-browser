@@ -2,8 +2,9 @@
 /* eslint-disable no-console */
 
 import Dexie from "dexie";
+import router from "./router";
 
-// Dexie.delete('minecraft');
+Dexie.delete("minecraft");
 
 const db = new Dexie("minecraft");
 db.version(1).stores({
@@ -14,13 +15,13 @@ db.version(1).stores({
 
 db.open();
 
-db.on("ready", function () {
-  return db.items.count(function (count) {
+db.on("ready", (db) => {
+  db.items.count((count) => {
     if (count > 0) {
       console.log("Already populated");
     } else {
       console.log("Database is empty. Populating from ajax call...");
-      let itemsPromise = new Promise(function (resolve, reject) {
+      const itemsPromise = new Promise((resolve, reject) => {
         $.ajax("/minecraft-item-browser/js/items.json", {
           type: "get",
           dataType: "json",
@@ -34,22 +35,24 @@ db.on("ready", function () {
           },
         });
       });
-      let recipesPromise = new Promise(function (resolve, reject) {
+      const recipesPromise = new Promise((resolve, reject) => {
         $.ajax("/minecraft-item-browser/js/recipes.json", {
           type: "get",
           dataType: "json",
-          error: function (xhr, textStatus) {
+          error: (xhr, textStatus) => {
             // Rejecting promise to make db.open() fail.
             reject(textStatus);
           },
-          success: function (data) {
+          success: (data) => {
             // Resolving Promise will launch then() below.
             resolve(data);
           },
         });
       });
+
+      const routeValue = router.currentRoute.value;
       new Promise.all([itemsPromise, recipesPromise])
-        .then(function (data) {
+        .then((data) => {
           console.log("Got ajax response. Adding objects.", data);
           // By returning the a promise, framework will keep
           // waiting for this promise to complete before resuming other
@@ -58,11 +61,18 @@ db.on("ready", function () {
           return new Promise.all([
             db.items.bulkAdd(data[0]),
             db.recipes.bulkAdd(data[1]),
-          ]).then(() => location.reload());
+          ]);
           // @TODO - reload is a hack otherwise a preloaded search doesn't retrigger.
         })
-        .then(function () {
+        .then(() => {
           console.log("Done populating.");
+          return db.items.get({
+            name: routeValue.params.item_name,
+          });
+        })
+        .then((item) => {
+          const matchedRoute = routeValue.matched[0].instances.default;
+          matchedRoute.setSelectedItem(item);
         });
     }
   });

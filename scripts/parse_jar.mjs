@@ -191,6 +191,30 @@ const makeItem = (sourceItem) => {
         }
       }
 
+      if (k.indexOf("armor_trim") !== -1 && !item.displayName) {
+        const nameMap = {
+          ward_armor_trim_smithing_template: "Ward Armor Trim Template",
+          spire_armor_trim_smithing_template: "Spire Armor Trim Template",
+          coast_armor_trim_smithing_template: "Coast Armor Trim Template",
+          eye_armor_trim_smithing_template: "Eye Armor Trim Template",
+          dune_armor_trim_smithing_template: "Dune Armor Trim Template",
+          wild_armor_trim_smithing_template: "Wild Armor Trim Template",
+          rib_armor_trim_smithing_template: "Rib Armor Trim Template",
+          tide_armor_trim_smithing_template: "Tide Armor Trim Template",
+          sentry_armor_trim_smithing_template: "Sentry Armor Trim Template",
+          vex_armor_trim_smithing_template: "Vex Armor Trim Template",
+          snout_armor_trim_smithing_template: "Snout Armor Trim Template",
+          wayfinder_armor_trim_smithing_template: "Wayfinder Armor Trim Template",
+          shaper_armor_trim_smithing_template: "Shaper Armor Trim Template",
+          silence_armor_trim_smithing_template: "Silence Armor Trim Template",
+          raiser_armor_trim_smithing_template: "Raiser Armor Trim Template",
+          host_armor_trim_smithing_template: "Host Armor Trim Template",
+        };
+        if (nameMap[k]) {
+          item.displayName = nameMap[k];
+        }
+      }
+
       item.textures = makeTextures("item/" + tagTextureKey);
 
       // Add to the hash and return the item.

@@ -11,19 +11,23 @@
 import McSidebar from "@/components/McSidebar.vue";
 import McResultView from "@/components/McResultView.vue";
 import db from "@/database";
+import { ref } from "vue";
 
 export default {
   components: {
     McSidebar,
     McResultView,
   },
-  data() {
-    return {
-      results: [],
-      selectedItem: undefined,
-    };
+  setup() {
+    const selectedItem = ref(undefined);
+    const results = ref([]);
+    return { selectedItem, results };
   },
   methods: {
+    setSelectedItem(item) {
+      console.log("SET ITEM", item);
+      this.selectedItem = item;
+    },
     updateQuery(query) {
       if (query.length) {
         let self = this;
@@ -45,20 +49,16 @@ export default {
     "$route.params": {
       immediate: true,
       handler(routeParams) {
-        let self = this;
         if (!routeParams.item_name) {
           return;
         }
 
-        db.items
-          .where("name")
-          .equals(routeParams.item_name)
-          .first()
-          .then(function (item) {
-            if (item) {
-              self.selectedItem = item;
-            }
-          });
+        db.items.get({ name: routeParams.item_name }).then((item) => {
+          console.log("Found Item: ", item);
+          if (item) {
+            this.setSelectedItem(item);
+          }
+        });
       },
     },
   },

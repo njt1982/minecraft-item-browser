@@ -6,7 +6,7 @@
     }"
     class="item-link"
     :data-item-id="item.id"
-    :title="item.displayName"
+    :title="this.visibleName"
   >
     <div
       v-for="(tid, index) in item.textures"
@@ -14,7 +14,7 @@
       :class="`mc-block texture-${tid}`"
       :style="textureStyles(index)"
     />
-    <span v-if="showName" class="text-muted">{{ item.displayName }}</span>
+    <span v-if="showName" class="text-muted">{{ this.visibleName }}</span>
   </router-link>
 </template>
 
@@ -32,6 +32,11 @@ export default {
       default: false,
     },
   },
+  computed: {
+    visibleName() {
+      return this.item.displayName ? this.item.displayName : this.item.name;
+    },
+  },
   methods: {
     textureStyles: function (layer) {
       const styles = {};
@@ -45,7 +50,7 @@ export default {
   mounted() {
     if (!this.showName) {
       $(this.$el).tooltip({
-        title: this.item.displayName,
+        title: this.visibleName,
         position: "top",
       });
     }
