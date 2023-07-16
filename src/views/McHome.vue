@@ -34,7 +34,7 @@ export default {
 
         db.items
           .filter((item) => regex.test(item.displayName))
-          .limit(10)
+          .limit(20)
           .toArray()
           .then(function (results) {
             self.results = results;
