@@ -14,7 +14,7 @@ app.use(
   {
     config: { id: "UA-527778-21" },
   },
-  router
+  router,
 );
 
 app.mount("#app");
