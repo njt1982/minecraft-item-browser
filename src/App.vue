@@ -8,6 +8,7 @@ $headings-font-family: "Slabo 27px", Serif;
 $font-family-sans-serif: "Open Sans Condensed", sans-serif;
 $tooltip-font-size: 1.25rem;
 $tooltip-bg: rgba(0, 0, 0, 0.8);
+$link-decoration: none;
 $input-btn-focus-width: 0;
 $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet...
 @import "~bootstrap";
@@ -17,43 +18,89 @@ $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet..
 @import "@/components/McRecipe.scss";
 @import "@/components/McItem.scss";
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: theme-color("dark");
-    color: theme-color("light");
+.dark-mode-toggle {
+  position: absolute;
+  top: -80px;
+  left: -80px;
+  background: rgba(var(--bs-dark-rgb), 0.7);
+  transition: background ease 0.25s;
+  fill: white;
+  width: 160px;
+  height: 160px;
+  transform: rotate(-45deg);
+  cursor: pointer;
+  &:hover {
+    background: rgba(var(--bs-dark-rgb), 0.9);
   }
-  .list-group-item-action,
-  .list-group-item,
-  .jumbotron {
-    background-color: darken(theme-color("dark"), 10);
-    color: theme-color("light");
+
+  svg {
+    position: relative;
+    bottom: -112px;
+    left: 60px;
+    width: 40px;
+    height: 40px;
+    display: none;
+  }
+  svg.light {
+    display: block;
+  }
+}
+
+.header-wrapper {
+  padding: 7rem 0 0.5rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--bs-dark-bg-subtle);
+
+  @include media-breakpoint-up(sm) {
+    padding: 3rem 0 2rem;
+  }
+}
+
+@include color-mode(dark) {
+  body {
+    background-color: $dark;
+    color: $light;
   }
   .list-group-item-action,
   .list-group-item {
-    border-color: rgba(theme-color("light"), 0.125);
+    background-color: darken($dark, 5);
+    color: $light;
+  }
+  .list-group-item-action,
+  .list-group-item {
+    border-color: rgba($light, 0.125);
     &:active,
     &:focus {
-      background-color: lighten(theme-color("dark"), 10);
-      color: theme-color("light");
+      background-color: lighten($dark, 5);
+      color: $light;
     }
     &:hover {
-      background-color: lighten(theme-color("dark"), 1);
-      color: theme-color("light");
+      background-color: lighten($dark, 1);
+      color: $light;
     }
   }
   .card {
-    background-color: lighten(theme-color("dark"), 5);
-    color: theme-color("light");
+    background-color: var(--bs-gray-800);
+    color: $light;
   }
+  .card-footer,
   .card-header {
-    background-color: lighten(theme-color("dark"), 10);
+    background-color: var(--bs-gray-900);
   }
   .text-muted {
-    color: theme-color("light") !important;
+    color: $light !important;
   }
-}
-.tooltip {
-  top: -16px !important;
+  .dark-mode-toggle {
+    svg.light {
+      display: none;
+    }
+    svg.dark {
+      display: block;
+    }
+  }
+  .tooltip {
+    --bs-tooltip-color: var(--bs-body-color);
+  }
 }
 .invslot {
   display: flex;

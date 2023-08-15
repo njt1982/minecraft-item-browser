@@ -12,6 +12,7 @@ import McSidebar from "@/components/McSidebar.vue";
 import McResultView from "@/components/McResultView.vue";
 import db from "@/database";
 import { ref } from "vue";
+import { Tooltip } from "bootstrap";
 
 export default {
   components: {
@@ -43,6 +44,12 @@ export default {
         this.results = [];
       }
     },
+  },
+  mounted() {
+    new Tooltip(this.$el, {
+      selector: "[data-bs-toggle=tooltip]",
+      offset: [0, 24],
+    });
   },
   watch: {
     "$route.params": {

@@ -1,15 +1,21 @@
 #search_results {
   .list-group-item {
     @extend .list-group-item-action;
-    @extend .d-flex;
-    @extend .align-items-center;
+
+    display: flex;
+    align-items: center;
+
     @include media-breakpoint-up(lg) {
       font-size: 1.2rem;
+    }
+
+    .mc-block {
+      margin: 0;
     }
   }
 }
 #search_form {
-  .input-group-prepend {
+  .input-group-text {
     svg {
       height: 1rem;
       fill: $secondary;

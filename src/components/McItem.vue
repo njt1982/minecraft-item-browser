@@ -6,6 +6,8 @@
     }"
     class="item-link"
     :data-item-id="item.id"
+    :data-bs-toggle="showName ? null : 'tooltip'"
+    :data-bs-title="this.visibleName"
     :title="this.visibleName"
   >
     <div
@@ -46,17 +48,6 @@ export default {
       }
       return styles;
     },
-  },
-  mounted() {
-    if (!this.showName) {
-      $(this.$el).tooltip({
-        title: this.visibleName,
-        position: "top",
-      });
-    }
-  },
-  beforeUnmount() {
-    $(this.$el).tooltip("dispose");
   },
 };
 </script>

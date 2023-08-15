@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import VueGtag from "vue-gtag";
-import "bootstrap";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import App from "./App.vue";
 import router from "./router";
 window.$ = require("jquery");
