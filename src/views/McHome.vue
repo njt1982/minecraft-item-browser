@@ -46,7 +46,7 @@ export default {
     },
   },
   mounted() {
-    new Tooltip(this.$el, {
+    this.tooltipHandler = new Tooltip(this.$el, {
       selector: "[data-bs-toggle=tooltip]",
       offset: [0, 24],
     });
@@ -55,6 +55,12 @@ export default {
     "$route.params": {
       immediate: true,
       handler(routeParams) {
+        if (this.tooltipHandler) {
+          // TODO - this feels wrong...
+          document.querySelectorAll("body > div.tooltip").forEach((el) => {
+            el.remove();
+          });
+        }
         if (!routeParams.item_name) {
           return;
         }
