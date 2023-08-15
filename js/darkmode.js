@@ -75,7 +75,7 @@
       }
     });
 
-  window.addEventListener("DOMContentLoaded", () => {
+  const initDarkMode = () => {
     showActiveTheme(getPreferredTheme());
 
     document
@@ -86,5 +86,10 @@
         setTheme(theme);
         showActiveTheme(theme, true);
       });
-  });
+  };
+  if (document.readyState !== "loading") {
+    initDarkMode();
+  } else {
+    document.addEventListener("DOMContentLoaded", initDarkMode);
+  }
 })();
