@@ -18,6 +18,12 @@ $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet..
 @import "@/components/McRecipe.scss";
 @import "@/components/McItem.scss";
 
+* {
+  transition-property: color, background-color;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-out;
+}
+
 .dark-mode-toggle {
   position: absolute;
   top: -80px;
