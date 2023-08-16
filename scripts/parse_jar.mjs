@@ -143,7 +143,7 @@ const lookupItemFromTag = (key) => {
   const path = "data/minecraft/tags/items/" + key + ".json";
   let tagData = JSON.parse(zip.entryDataSync(path).toString());
 
-  // TODO - bit maff
+  // TODO - bit naff
   // If the first tag (that we use) is a hash, then it is a tag itself... recurse!
   if (tagData["values"][0][0] === "#") {
     console.log("Nested tags for: ", key);
@@ -204,7 +204,7 @@ const makeItem = (sourceItem) => {
           sentry_armor_trim_smithing_template: "Sentry Armor Trim Template",
           vex_armor_trim_smithing_template: "Vex Armor Trim Template",
           snout_armor_trim_smithing_template: "Snout Armor Trim Template",
-          wayfinder_armor_trim_smithing_template: "Wayfinder Armor Trim Template",
+          wayfinder_armor_trim_smithing_template: "Wayfinder Armor Trim Template", // prettier-ignore
           shaper_armor_trim_smithing_template: "Shaper Armor Trim Template",
           silence_armor_trim_smithing_template: "Silence Armor Trim Template",
           raiser_armor_trim_smithing_template: "Raiser Armor Trim Template",
@@ -241,7 +241,7 @@ const makeRecipe = (data, path) => {
   };
 
   if (data.type == "minecraft:crafting_shaped") {
-    const ingredients = parseItemList(Object.values(data.key));
+    const ingredients = parseItemList(Object.values(data.key), false).flat();
     recipe.ingredients = ingredients.map((i) => i.id);
 
     // Map the ingredient items to the key codes.
@@ -251,12 +251,13 @@ const makeRecipe = (data, path) => {
       // If the value is an array, it means there are options for this ingredient.
       // Example: A torch can be made with coal or charchol above a stick. Or TNT with sand or red_sand.
       if (Array.isArray(v)) {
-        map[k] = v.map((vv) =>
-          ingredients.find((i) => i.name == getItemKey(vv)),
-        );
-        console.log(map);
+        map[k] = v.map((vv) => {
+          const vvKey = getItemKey(vv);
+          return ingredients.find((i) => i.name == vvKey);
+        });
       } else {
-        map[k] = ingredients.find((i) => i.name == getItemKey(v));
+        const vKey = getItemKey(v);
+        map[k] = ingredients.find((i) => i.name == vKey);
       }
     }
 
@@ -273,21 +274,21 @@ const makeRecipe = (data, path) => {
       });
     }
   } else if (data.type == "minecraft:crafting_shapeless") {
-    recipe.ingredients = parseItemList(data.ingredients).map((i) => i.id);
+    recipe.ingredients = parseItemList(data.ingredients);
   } else if (data.type === "minecraft:smelting") {
-    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
+    recipe.ingredients = parseItemList(data.ingredient);
   } else if (data.type == "minecraft:stonecutting") {
-    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
+    recipe.ingredients = parseItemList(data.ingredient);
   } else if (data.type == "minecraft:smithing") {
     recipe.base = makeItem(data.base).id;
     recipe.addition = makeItem(data.addition).id;
     recipe.ingredients = [recipe.base, recipe.addition];
   } else if (data.type == "minecraft:blasting") {
-    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
+    recipe.ingredients = parseItemList(data.ingredient);
   } else if (data.type == "minecraft:smoking") {
-    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
+    recipe.ingredients = parseItemList(data.ingredient);
   } else if (data.type == "minecraft:campfire_cooking") {
-    recipe.ingredients = parseItemList(data.ingredient).map((i) => i.id);
+    recipe.ingredients = parseItemList(data.ingredient);
   } else if (data.type == "minecraft:brewing") {
     recipe.base = makeItem(data.base).id;
     recipe.ingredients.push(recipe.base);
@@ -309,20 +310,20 @@ const makeRecipe = (data, path) => {
   return recipe;
 };
 
-const parseItemList = (a) => {
+const parseItemList = (a, flat = true) => {
   var list = [],
     m;
   if (Array.isArray(a)) {
     for (const k of a) {
-      // Most of the time if "a" is an array, it an array if {item:'blah'}...
-      // but sometimes it is an array of {item:'blah'}. Consistency, eh.
+      // Most of the time if "a" is an array, its an array if {item:'blah'}...
+      // but sometimes an entry is an array of alternative options.
       if (Array.isArray(k)) {
-        console.log("NESTED ARRAY");
-        list = list.concat(parseItemList(k));
+        console.log("NOTE: List has nested array");
+        list.push(parseItemList(k, flat));
       } else {
         m = makeItem(k);
         if (m) {
-          list.push(m);
+          list.push(flat ? m.id : m);
         } else {
           console.log("ERROR: Cant find item: " + k);
         }
@@ -331,7 +332,7 @@ const parseItemList = (a) => {
   } else {
     m = makeItem(a);
     if (m) {
-      list.push(m);
+      list.push(flat ? m.id : m);
     } else {
       console.log("ERROR: Cant find item: " + a);
     }

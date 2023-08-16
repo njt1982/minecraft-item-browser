@@ -149,7 +149,7 @@ export default {
     db.items.get(this.recipe.result.id).then((item) => {
       this.createsItem = item;
     });
-    db.items.bulkGet(this.recipe.ingredients).then((items) => {
+    db.items.bulkGet(this.recipe.ingredients.flat()).then((items) => {
       this.loadedIngredients = items;
     });
   },
