@@ -19,6 +19,7 @@
     "bootstrap": "^5.3",
     "core-js": "^3.6.5",
     "dexie": "^3.2.2",
+    "escape-string-regexp": "^5.0.0",
     "jquery": "^3.5.1",
     "lodash": "^4.17.19",
     "sass": "^1.43.3",

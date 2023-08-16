@@ -1,23 +1,30 @@
 <template>
-  <router-link
-    :to="{
-      name: 'Home',
-      params: { item_name: item.name },
-    }"
-    class="item-link"
-    :data-item-id="item.id"
-    :data-bs-toggle="showName ? null : 'tooltip'"
-    :data-bs-title="this.visibleName"
-    :title="this.visibleName"
+  <span
+    :class="showName ? '' : 'invslot'"
+    :data-visible-item="visibleItemIndex"
   >
-    <div
-      v-for="(tid, index) in item.textures"
-      :key="tid"
-      :class="`mc-block texture-${tid}`"
-      :style="textureStyles(index)"
-    />
-    <span v-if="showName" class="text-muted">{{ this.visibleName }}</span>
-  </router-link>
+    <router-link
+      v-for="item in items"
+      :key="item.id"
+      :to="{
+        name: 'Home',
+        params: { item_name: item.name },
+      }"
+      class="item-link"
+      :data-item-id="item.id"
+      :data-bs-toggle="showName ? null : 'tooltip'"
+      :data-bs-title="visibleName(item)"
+      :title="visibleName(item)"
+    >
+      <div
+        v-for="(tid, index) in item.textures"
+        :key="tid"
+        :class="`mc-block texture-${tid}`"
+        :style="textureStyles(item, index)"
+      />
+      <span v-if="showName" class="text-muted">{{ visibleName(item) }}</span>
+    </router-link>
+  </span>
 </template>
 
 <script>
@@ -25,7 +32,7 @@
 
 export default {
   props: {
-    item: {
+    items: {
       type: Object,
       required: true,
     },
@@ -34,17 +41,35 @@ export default {
       default: false,
     },
   },
-  computed: {
-    visibleName() {
-      return this.item.displayName ? this.item.displayName : this.item.name;
-    },
+  data() {
+    return {
+      interval: null,
+      visibleItemIndex: 0,
+    };
+  },
+  mounted() {
+    if (this.items && this.items.length > 1) {
+      this.interval = setInterval(() => {
+        this.visibleItemIndex += 1;
+        if (this.visibleItemIndex >= this.items.length) {
+          this.visibleItemIndex = 0;
+        }
+      }, 1000);
+    }
+  },
+  beforeUnmount() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
   },
   methods: {
-    textureStyles: function (layer) {
+    visibleName: function (item) {
+      return item.displayName ? item.displayName : item.name;
+    },
+    textureStyles: function (item, layer) {
       const styles = {};
-      if (this.item.tint && this.item.tint[layer]) {
-        styles.backgroundColor =
-          "rgba(" + this.item.tint[layer].join(",") + ")";
+      if (item.tint && item.tint[layer]) {
+        styles.backgroundColor = "rgba(" + item.tint[layer].join(",") + ")";
       }
       return styles;
     },

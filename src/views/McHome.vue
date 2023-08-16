@@ -13,6 +13,7 @@ import McResultView from "@/components/McResultView.vue";
 import db from "@/database";
 import { ref } from "vue";
 import { Tooltip } from "bootstrap";
+import escapeStringRegexp from "escape-string-regexp";
 
 export default {
   components: {
@@ -31,7 +32,7 @@ export default {
     updateQuery(query) {
       if (query.length) {
         let self = this;
-        let regex = new RegExp(query, "i");
+        let regex = new RegExp(escapeStringRegexp(query), "i");
 
         db.items
           .filter((item) => regex.test(item.displayName))

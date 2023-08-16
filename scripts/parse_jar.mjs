@@ -42,7 +42,7 @@ const writeCSS = (filename, items) => {
 const textureCss = (textures) => {
   return textures.map(
     (t, i) =>
-      ".texture-" + i + " { --imgUrl: url('data:image/png;base64," + t + "') }"
+      ".texture-" + i + " { --imgUrl: url('data:image/png;base64," + t + "') }",
   );
 };
 
@@ -248,19 +248,27 @@ const makeRecipe = (data, path) => {
     var map = {};
     for (var k in data.key) {
       let v = data.key[k];
+      // If the value is an array, it means there are options for this ingredient.
+      // Example: A torch can be made with coal or charchol above a stick. Or TNT with sand or red_sand.
       if (Array.isArray(v)) {
-        // @TODO - This means the recipe has options for this slot
-        // Example: A torch can be made with coal or charchol above a stick. Or TNT with sand or red_sand.
-        console.log("WARNING: Array found for recipe for: ", k, v);
-        v = v.pop();
+        map[k] = v.map((vv) =>
+          ingredients.find((i) => i.name == getItemKey(vv)),
+        );
+        console.log(map);
+      } else {
+        map[k] = ingredients.find((i) => i.name == getItemKey(v));
       }
-      map[k] = ingredients.find((i) => i.name == getItemKey(v));
     }
 
     if (data.pattern) {
       recipe.inShape = data.pattern.map((row) => {
         return row.split("").map((col) => {
-          return map[col] ? map[col].id : null;
+          if (map[col]) {
+            return Array.isArray(map[col])
+              ? map[col].map((i) => i.id)
+              : map[col].id;
+          }
+          return null;
         });
       });
     }
@@ -309,6 +317,7 @@ const parseItemList = (a) => {
       // Most of the time if "a" is an array, it an array if {item:'blah'}...
       // but sometimes it is an array of {item:'blah'}. Consistency, eh.
       if (Array.isArray(k)) {
+        console.log("NESTED ARRAY");
         list = list.concat(parseItemList(k));
       } else {
         m = makeItem(k);
@@ -334,7 +343,7 @@ zip.on("ready", () => {
   console.log("Entries read: " + zip.entriesCount);
 
   const lang = JSON.parse(
-    zip.entryDataSync("assets/minecraft/lang/en_us.json").toString()
+    zip.entryDataSync("assets/minecraft/lang/en_us.json").toString(),
   );
   const filterRegex =
     /^(block|item)\.minecraft\.(?<name>([^\\.]+|(tipped_arrow|potion|splash_potion|lingering_potion)\.effect\..+))$/;

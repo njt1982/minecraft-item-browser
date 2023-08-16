@@ -31,3 +31,12 @@
     }
   }
 }
+
+.invslot[data-visible-item] > .item-link {
+  display: none;
+}
+@for $dvi from 0 through 50 {
+  .invslot[data-visible-item="#{$dvi}"] > .item-link:nth-child(#{$dvi + 1}) {
+    display: block;
+  }
+}

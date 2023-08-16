@@ -26,7 +26,7 @@
       <McItem
         v-for="item in results"
         :key="item.id"
-        :item="item"
+        :items="[item]"
         v-bind:show-name="true"
         class="list-group-item"
       />

@@ -7,8 +7,8 @@
       <div class="card-body d-flex">
         <div v-if="inputGrid" class="input-recipe">
           <div v-for="(row, index) in inputGrid" :key="index">
-            <span class="invslot" v-for="(col, index) in row" :key="index">
-              <McItem v-if="col != null" :item="getIngredientItem(col)" />
+            <span v-for="(col, index) in row" :key="index">
+              <McItem :items="getIngredientItems(col)" />
             </span>
           </div>
         </div>
@@ -25,14 +25,14 @@
         </svg>
 
         <span class="result">
-          <div class="invslot"><McItem :item="createsItem" /></div>
+          <McItem :items="[createsItem]" />
           <span class="count" v-if="recipe.result.count > 1">
             {{ recipe.result.count }}
           </span>
         </span>
       </div>
       <div class="card-footer" v-if="showFooter">
-        <McItem :item="this.craftingTableItem" v-bind:show-name="true" />
+        <McItem :items="[this.craftingTableItem]" v-bind:show-name="true" />
       </div>
     </div>
   </div>
@@ -124,8 +124,11 @@ export default {
     },
   },
   methods: {
-    getIngredientItem(id) {
-      return this.loadedIngredients.find((loadedItem) => loadedItem.id == id);
+    getIngredientItems(ids) {
+      ids = Array.isArray(ids) ? ids : [ids];
+      return this.loadedIngredients.filter((loadedItem) =>
+        ids.includes(loadedItem.id),
+      );
     },
   },
   created() {
