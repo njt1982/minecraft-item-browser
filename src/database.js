@@ -5,9 +5,9 @@ Dexie.delete("minecraft");
 
 const db = new Dexie("minecraft");
 db.version(1).stores({
-  items: "++id, &name, displayName, texture",
+  items: "++id, &name",
   recipes:
-    "++id, *ingredients, *result.id, type, inShape, base, addition, result",
+    "++id, *ingredients, *result.id, type",
 });
 
 db.open();
