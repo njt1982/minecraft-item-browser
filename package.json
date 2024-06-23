@@ -2,18 +2,19 @@
   "name": "minecraft-browser",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Minecraft Item Search",
   "author": "Nicholas Thompson <njt1982@gmail.com>",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "serve": "vite serve",
+    "build": "vite build",
+    "dev": "vite",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "sitemap": "node scripts/sitemap.mjs",
     "download_client_data": "node scripts/download_client_data.mjs",
     "parse_jar": "node scripts/parse_jar.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.11.0",
     "@popperjs/core": "^2.11.8",
     "@vue/compat": "^3.2",
     "bootstrap": "^5.3",
@@ -30,11 +31,7 @@
     "webpack": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.18",
-    "@vue/cli-plugin-babel": "^5.0",
-    "@vue/cli-plugin-eslint": "^5.0",
-    "@vue/cli-plugin-router": "^5.0",
-    "@vue/cli-service": "^5.0",
+    "@vitejs/plugin-vue": "^5.0",
     "@vue/compiler-sfc": "^3.2",
     "@vue/eslint-config-prettier": "^8.0",
     "eslint": "^8.21.0",
@@ -44,14 +41,15 @@
     "node-fetch": "^3.1",
     "node-stream-zip": "^1.11.3",
     "prettier": "^3.0",
-    "sass-loader": "^13.0.2"
+    "vite": "^5.0",
+    "yorkie": "^2.0.0"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,jsx,vue}": [
-      "vue-cli-service lint"
+      "npm run lint"
     ]
   }
 }

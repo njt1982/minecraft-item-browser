@@ -3,6 +3,12 @@
     <router-view />
   </div>
 </template>
+<script>
+export default {
+  name: "App",
+};
+</script>
+
 <style lang="scss">
 $headings-font-family: "Slabo 27px", Serif;
 $font-family-sans-serif: "Open Sans Condensed", sans-serif;
@@ -11,8 +17,8 @@ $tooltip-bg: rgba(0, 0, 0, 0.8);
 $link-decoration: none;
 $input-btn-focus-width: 0;
 $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet...
-@import "~bootstrap";
-@import "~../public/css/textures.css";
+@import "~/bootstrap";
+// @import "~../public/css/textures.css";
 
 @import "@/components/McSidebar.scss";
 @import "@/components/McRecipe.scss";
@@ -153,9 +159,3 @@ $input-focus-border-color: #ced4da; // $grey-400, but variables dont exist yet..
   }
 }
 </style>
-
-<script>
-export default {
-  name: "app",
-};
-</script>

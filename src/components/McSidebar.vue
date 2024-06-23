@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-3 mb-4">
     <h4>Search</h4>
-    <div class="form-group mb-3" id="search_form">
+    <div id="search_form" class="form-group mb-3">
       <div class="input-group">
         <span class="input-group-text">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -12,22 +12,22 @@
           </svg>
         </span>
         <input
+          v-model="mutableQuery"
           type="search"
           class="form-control"
-          v-model="mutableQuery"
-          @input="runSearch"
           placeholder="Search"
+          @input="runSearch"
         />
       </div>
     </div>
 
     <h4>Results</h4>
-    <div class="list-group" id="search_results">
+    <div id="search_results" class="list-group">
       <McItem
         v-for="item in results"
         :key="item.id"
         :items="[item]"
-        v-bind:show-name="true"
+        :show-name="true"
         class="list-group-item"
       />
     </div>
@@ -36,29 +36,23 @@
 
 <script>
 import _debounce from "lodash/debounce";
-import db from "@/database";
-import McItem from "./McItem";
+import McItem from "@/components/McItem";
 
 export default {
-  props: {
-    results: Array,
-  },
   components: {
     McItem,
   },
-  created() {
-    if (this.$route.params.item_name) {
-      let self = this;
-      db.items.get({ name: this.$route.params.item_name }).then((result) => {
-        if (result) {
-          self.mutableQuery = result.displayName;
-        } else {
-          self.mutableQuery = self.$route.params.item_name;
-        }
-        self.$emit("runSearch", self.mutableQuery);
-      });
-    }
+  props: {
+    results: {
+      type: Array,
+      default: () => [],
+    },
+    selectedItem: {
+      type: Object,
+      default: null,
+    },
   },
+  emits: ["runSearch"],
   data() {
     return {
       mutableQuery: "",
@@ -69,6 +63,14 @@ export default {
       return _debounce(function inputCaptured(e) {
         this.$emit("runSearch", e.srcElement.value);
       }, 50).bind(this);
+    },
+  },
+  watch: {
+    selectedItem: function (newItem) {
+      if (this.mutableQuery == "") {
+        this.mutableQuery = newItem.displayName;
+        this.$emit("runSearch", this.mutableQuery);
+      }
     },
   },
 };

@@ -20,49 +20,23 @@ db.on("ready", (db) => {
     if (count > 0) {
       console.log("Already populated");
     } else {
-      console.log("Database is empty. Populating from ajax call...");
-      const itemsPromise = new Promise((resolve, reject) => {
-        $.ajax("/minecraft-item-browser/js/items.json", {
-          type: "get",
-          dataType: "json",
-          error: function (xhr, textStatus) {
-            // Rejecting promise to make db.open() fail.
-            reject(textStatus);
-          },
-          success: function (data) {
-            // Resolving Promise will launch then() below.
-            resolve(data);
-          },
-        });
-      });
-      const recipesPromise = new Promise((resolve, reject) => {
-        $.ajax("/minecraft-item-browser/js/recipes.json", {
-          type: "get",
-          dataType: "json",
-          error: (xhr, textStatus) => {
-            // Rejecting promise to make db.open() fail.
-            reject(textStatus);
-          },
-          success: (data) => {
-            // Resolving Promise will launch then() below.
-            resolve(data);
-          },
-        });
-      });
-
+      console.log("Database is empty. Fetching JSON to populate DB.");
+      const itemsPromise = fetch("/minecraft-item-browser/js/items.json").then(
+        (response) => response.json(),
+      );
+      const recipesPromise = fetch(
+        "/minecraft-item-browser/js/recipes.json",
+      ).then((response) => response.json());
       const routeValue = router.currentRoute.value;
       new Promise.all([itemsPromise, recipesPromise])
         .then((data) => {
-          console.log("Got ajax response. Adding objects.", data);
           // By returning the a promise, framework will keep
           // waiting for this promise to complete before resuming other
           // db-operations.
-          console.log("Calling bulkAdd() to insert objects...");
           return new Promise.all([
             db.items.bulkAdd(data[0]),
             db.recipes.bulkAdd(data[1]),
           ]);
-          // @TODO - reload is a hack otherwise a preloaded search doesn't retrigger.
         })
         .then(() => {
           console.log("Done populating.");

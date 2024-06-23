@@ -3,7 +3,7 @@ import VueGtag from "vue-gtag";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import App from "./App.vue";
 import router from "./router";
-window.$ = require("jquery");
+// window.$ = require("jquery");
 
 const app = createApp(App);
 

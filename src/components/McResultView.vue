@@ -1,6 +1,6 @@
 <template>
-  <div v-if="item" class="col-md-9">
-    <h1 class="mb-5">{{ item.displayName }}</h1>
+  <div v-if="selectedItem" class="col-md-9">
+    <h1 class="mb-5">{{ selectedItem.displayName }}</h1>
 
     <div v-if="created_by.length" class="mb-4">
       <h2>Created By</h2>
@@ -9,8 +9,8 @@
           v-for="recipe in created_by"
           :key="recipe.id"
           :recipe="recipe"
-          :suggestedInput="item"
-          showFooter
+          :suggested-input="selectedItem"
+          show-footer
         />
       </div>
     </div>
@@ -22,9 +22,9 @@
           v-for="recipe in used_in"
           :key="recipe.id"
           :recipe="recipe"
-          :suggestedInput="item"
-          showHeader
-          showFooter
+          :suggested-input="selectedItem"
+          show-header
+          show-footer
         />
       </div>
     </div>
@@ -36,9 +36,9 @@
           v-for="recipe in creates"
           :key="recipe.id"
           :recipe="recipe"
-          :suggestedInput="item"
-          showHeader
-          showFooter
+          :suggested-input="selectedItem"
+          show-header
+          show-footer
         />
       </div>
     </div>
@@ -53,11 +53,14 @@ import db from "@/database";
 import McRecipe from "./McRecipe";
 
 export default {
-  props: {
-    item: Object,
-  },
   components: {
     McRecipe,
+  },
+  props: {
+    selectedItem: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
@@ -67,7 +70,7 @@ export default {
     };
   },
   watch: {
-    item: function (newItem) {
+    selectedItem: function (newItem) {
       const createsMapping = {
         crafting_table: ["crafting_shapeless", "crafting_shaped"],
         furnace: ["smelting"],

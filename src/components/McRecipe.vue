@@ -1,13 +1,13 @@
 <template>
-  <div class="col-6 col-xl-4 mb-3" v-if="isReady">
+  <div v-if="isReady" class="col-6 col-xl-4 mb-3">
     <div class="card recipe">
-      <div class="card-header" v-if="showHeader">
+      <div v-if="showHeader" class="card-header">
         <h4 class="mb-0">{{ createsItem.displayName }}</h4>
       </div>
       <div class="card-body d-flex">
         <div v-if="inputGrid" class="input-recipe">
-          <div v-for="(row, index) in inputGrid" :key="index">
-            <span v-for="(col, index) in row" :key="index">
+          <div v-for="(row, row_index) in inputGrid" :key="row_index">
+            <span v-for="(col, col_index) in row" :key="col_index">
               <McItem :items="getIngredientItems(col)" />
             </span>
           </div>
@@ -26,13 +26,13 @@
 
         <span class="result">
           <McItem :items="[createsItem]" />
-          <span class="count" v-if="recipe.result.count > 1">
+          <span v-if="recipe.result.count > 1" class="count">
             {{ recipe.result.count }}
           </span>
         </span>
       </div>
-      <div class="card-footer" v-if="showFooter">
-        <McItem :items="[this.craftingTableItem]" v-bind:show-name="true" />
+      <div v-if="showFooter" class="card-footer">
+        <McItem :items="[craftingTableItem]" :show-name="true" />
       </div>
     </div>
   </div>
@@ -43,8 +43,14 @@ import db from "@/database";
 import McItem from "./McItem";
 
 export default {
+  components: {
+    McItem,
+  },
   props: {
-    recipe: Object,
+    recipe: {
+      type: Object,
+      required: true,
+    },
     showHeader: {
       type: Boolean,
       default: false,
@@ -57,9 +63,6 @@ export default {
       type: Object,
       default: undefined,
     },
-  },
-  components: {
-    McItem,
   },
   data() {
     return {
@@ -123,14 +126,6 @@ export default {
       return grid;
     },
   },
-  methods: {
-    getIngredientItems(ids) {
-      ids = Array.isArray(ids) ? ids : [ids];
-      return this.loadedIngredients.filter((loadedItem) =>
-        ids.includes(loadedItem.id),
-      );
-    },
-  },
   created() {
     const craftingTableMap = {
       crafting_shapeless: "crafting_table",
@@ -152,6 +147,14 @@ export default {
     db.items.bulkGet(this.recipe.ingredients.flat()).then((items) => {
       this.loadedIngredients = items;
     });
+  },
+  methods: {
+    getIngredientItems(ids) {
+      ids = Array.isArray(ids) ? ids : [ids];
+      return this.loadedIngredients.filter((loadedItem) =>
+        ids.includes(loadedItem.id),
+      );
+    },
   },
 };
 </script>

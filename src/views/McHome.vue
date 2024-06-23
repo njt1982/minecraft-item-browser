@@ -1,8 +1,12 @@
 <template>
   <div class="container">
     <div class="row">
-      <McSidebar v-on:runSearch="updateQuery" :results="results" />
-      <McResultView :item="selectedItem" />
+      <McSidebar
+        :results="results"
+        :selected-item="selectedItem"
+        @run-search="updateQuery"
+      />
+      <McResultView :selected-item="selectedItem" />
     </div>
   </div>
 </template>
@@ -25,33 +29,6 @@ export default {
     const results = ref([]);
     return { selectedItem, results };
   },
-  methods: {
-    setSelectedItem(item) {
-      this.selectedItem = item;
-    },
-    updateQuery(query) {
-      if (query.length) {
-        let self = this;
-        let regex = new RegExp(escapeStringRegexp(query), "i");
-
-        db.items
-          .filter((item) => regex.test(item.displayName))
-          .limit(20)
-          .toArray()
-          .then(function (results) {
-            self.results = results;
-          });
-      } else {
-        this.results = [];
-      }
-    },
-  },
-  mounted() {
-    this.tooltipHandler = new Tooltip(this.$el, {
-      selector: "[data-bs-toggle=tooltip]",
-      offset: [0, 24],
-    });
-  },
   watch: {
     "$route.params": {
       immediate: true,
@@ -72,6 +49,34 @@ export default {
           }
         });
       },
+    },
+  },
+  mounted() {
+    this.tooltipHandler = new Tooltip(this.$el, {
+      selector: "[data-bs-toggle=tooltip]",
+      offset: [0, 24],
+    });
+  },
+  methods: {
+    setSelectedItem(item) {
+      this.selectedItem = item;
+      document.title = item.displayName + " - Minecraft Item Browser";
+    },
+    updateQuery(query) {
+      if (query.length) {
+        let self = this;
+        let regex = new RegExp(escapeStringRegexp(query), "i");
+
+        db.items
+          .filter((item) => regex.test(item.displayName))
+          .limit(20)
+          .toArray()
+          .then(function (results) {
+            self.results = results;
+          });
+      } else {
+        this.results = [];
+      }
     },
   },
 };
