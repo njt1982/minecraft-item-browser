@@ -18,9 +18,9 @@ sitemap.pipe(writeStream);
 
 items.map(item =>
   sitemap.write({
-    url: `${BASE_URL}/#/${item.name}`,
-    changefreq: "daily",
-    priority: 0.3
+    url: `${BASE_URL}/${item.name}`,
+    changefreq: "weekly",
+    priority: 0.5
   })
 );
 

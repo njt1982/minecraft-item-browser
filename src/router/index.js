@@ -1,11 +1,15 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import McHome from "@/views/McHome.vue";
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [
     {
-      path: "/:item_name?",
+      path: '/',
+      redirect: { name: 'Home' }
+    },
+    {
+      path: "/minecraft-item-browser/:item_name?",
       name: "Home",
       component: McHome,
       props: true,
