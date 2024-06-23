@@ -22,7 +22,10 @@
         :class="`mc-block texture-${tid}`"
         :style="textureStyles(item, index)"
       />
-      <span v-if="showName" class="text-muted">{{ visibleName(item) }}</span>
+      <span
+        v-if="showName"
+        class="text-muted"
+      >{{ visibleName(item) }}</span>
     </router-link>
   </span>
 </template>

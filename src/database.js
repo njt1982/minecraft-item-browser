@@ -1,6 +1,3 @@
-/* eslint-env jquery */
-/* eslint-disable no-console */
-
 import Dexie from "dexie";
 import router from "./router";
 

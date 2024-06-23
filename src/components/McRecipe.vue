@@ -1,13 +1,30 @@
 <template>
-  <div v-if="isReady" class="col-6 col-xl-4 mb-3">
+  <div
+    v-if="isReady"
+    class="col-6 col-xl-4 mb-3"
+  >
     <div class="card recipe">
-      <div v-if="showHeader" class="card-header">
-        <h4 class="mb-0">{{ createsItem.displayName }}</h4>
+      <div
+        v-if="showHeader"
+        class="card-header"
+      >
+        <h4 class="mb-0">
+          {{ createsItem.displayName }}
+        </h4>
       </div>
       <div class="card-body d-flex">
-        <div v-if="inputGrid" class="input-recipe">
-          <div v-for="(row, row_index) in inputGrid" :key="row_index">
-            <span v-for="(col, col_index) in row" :key="col_index">
+        <div
+          v-if="inputGrid"
+          class="input-recipe"
+        >
+          <div
+            v-for="(row, row_index) in inputGrid"
+            :key="row_index"
+          >
+            <span
+              v-for="(col, col_index) in row"
+              :key="col_index"
+            >
               <McItem :items="getIngredientItems(col)" />
             </span>
           </div>
@@ -26,13 +43,22 @@
 
         <span class="result">
           <McItem :items="[createsItem]" />
-          <span v-if="recipe.result.count > 1" class="count">
+          <span
+            v-if="recipe.result.count > 1"
+            class="count"
+          >
             {{ recipe.result.count }}
           </span>
         </span>
       </div>
-      <div v-if="showFooter" class="card-footer">
-        <McItem :items="[craftingTableItem]" :show-name="true" />
+      <div
+        v-if="showFooter"
+        class="card-footer"
+      >
+        <McItem
+          :items="[craftingTableItem]"
+          :show-name="true"
+        />
       </div>
     </div>
   </div>

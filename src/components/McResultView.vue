@@ -1,8 +1,16 @@
 <template>
-  <div v-if="selectedItem" class="col-md-9">
-    <h1 class="mb-5">{{ selectedItem.displayName }}</h1>
+  <div
+    v-if="selectedItem"
+    class="col-md-9"
+  >
+    <h1 class="mb-5">
+      {{ selectedItem.displayName }}
+    </h1>
 
-    <div v-if="created_by.length" class="mb-4">
+    <div
+      v-if="created_by.length"
+      class="mb-4"
+    >
       <h2>Created By</h2>
       <div class="row">
         <McRecipe
@@ -15,7 +23,10 @@
       </div>
     </div>
 
-    <div v-if="used_in.length" class="mb-4">
+    <div
+      v-if="used_in.length"
+      class="mb-4"
+    >
       <h2>Used In</h2>
       <div class="row">
         <McRecipe
@@ -29,7 +40,10 @@
       </div>
     </div>
 
-    <div v-if="creates.length" class="mb-4">
+    <div
+      v-if="creates.length"
+      class="mb-4"
+    >
       <h2>Creates</h2>
       <div class="row">
         <McRecipe
@@ -43,7 +57,10 @@
       </div>
     </div>
   </div>
-  <div v-else class="col-md-9">
+  <div
+    v-else
+    class="col-md-9"
+  >
     <p>Do a search and select an item.</p>
   </div>
 </template>
