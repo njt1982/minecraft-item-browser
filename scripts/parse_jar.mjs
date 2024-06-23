@@ -53,6 +53,8 @@ const makeKey = (s) => {
 const getItemKey = (o) => {
   if (typeof o == "string") {
     return makeKey(o);
+  } else if (o.id) {
+    return makeKey(o.id);
   } else if (o.item) {
     return makeKey(o.item);
   } else if (o.tag) {
@@ -140,7 +142,7 @@ const makeTextures = (key) => {
 
 const lookupItemFromTag = (key) => {
   key = makeKey(key);
-  const path = "data/minecraft/tags/items/" + key + ".json";
+  const path = "data/minecraft/tags/item/" + key + ".json";
   let tagData = JSON.parse(zip.entryDataSync(path).toString());
 
   // TODO - bit naff
@@ -359,7 +361,7 @@ zip.on("ready", () => {
   const jarEntries = zip.entries();
   for (const path of Object.keys(jarEntries)) {
     // Is a recipe ?
-    if (path.indexOf("data/minecraft/recipes") === 0) {
+    if (path.indexOf("data/minecraft/recipe") === 0) {
       // Load recipe
       const data = JSON.parse(zip.entryDataSync(path).toString());
 
