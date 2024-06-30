@@ -27,9 +27,6 @@ jobs:
     - name: Build Sitemap
       run: npm run sitemap
 
-    - name: 404 handling
-      run: cp dist/index.html dist/404.html
-
     - name: Install SSH Client
       uses: webfactory/ssh-agent@v0.9.0
       with:
