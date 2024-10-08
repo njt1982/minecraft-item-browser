@@ -27,6 +27,8 @@ const effectColourMap = {
   regeneration: [241, 98, 252, 1.0],
   strength: [145, 36, 35, 1.0],
   weakness: [70, 76, 69, 1.0],
+  oozing: [142, 255, 153, 1.0],
+  infested: [128, 163, 202, 1.0],
 };
 
 const writeJson = (filename, data, debug = false) => {
@@ -229,8 +231,8 @@ const makeItem = (sourceItem) => {
   }
 };
 
-const makeRecipe = (data, path) => {
-  console.log("PROCESSING: ", data.type, " : ", path);
+const makeRecipe = (data) => {
+  console.log("PROCESSING: ", data.type);
 
   var recipe = {
     id: Object.keys(recipes).length,
@@ -392,9 +394,11 @@ zip.on("ready", () => {
   makeRecipe({ type: "minecraft:brewing", base: "minecraft:potion.effect.healing",      addition: "minecraft:fermented_spider_eye",   result: { item: "potion.effect.harming",         count: 3}}, "BREWING/potion.harming"); // prettier-ignore
   makeRecipe({ type: "minecraft:brewing", base: "minecraft:potion.effect.poison",       addition: "minecraft:fermented_spider_eye",   result: { item: "potion.effect.harming",         count: 3}}, "BREWING/potion.harming"); // prettier-ignore
   makeRecipe({ type: "minecraft:brewing", base: "minecraft:potion.effect.night_vision", addition: "minecraft:fermented_spider_eye",   result: { item: "potion.effect.invisibility",    count: 3}}, "BREWING/potion.invisibility"); // prettier-ignore
+  makeRecipe({ type: "minecraft:brewing", base: "minecraft:potion.effect.oozing",       addition: "minecraft:slime_block",            result: { item: "potion.effect.oozing",          count: 3}}, "BREWING/potion.oozing"); // prettier-ignore
+  makeRecipe({ type: "minecraft:brewing", base: "minecraft:potion.effect.infested",     addition: "minecraft:stone",                  result: { item: "potion.effect.infested",        count: 3}}, "BREWING/potion.infested"); // prettier-ignore
 
   // prettier-ignore
-  ["water", "swiftness", "leaping", "strength", "healing", "poison", "regeneration", "fire_resistance", "water_breathing", "night_vision", "turtle_master", "slow_falling", "weakness", "slowness", "harming", "invisibility"].forEach(effect => {
+  ["water", "swiftness", "leaping", "strength", "healing", "poison", "regeneration", "fire_resistance", "water_breathing", "night_vision", "turtle_master", "slow_falling", "weakness", "slowness", "harming", "invisibility", "oozing"].forEach(effect => {
     makeRecipe(
       {
         type: "minecraft:brewing",
